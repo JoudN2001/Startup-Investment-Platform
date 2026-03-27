@@ -1,9 +1,9 @@
 import { Route, Routes, Link } from "react-router-dom";
 
 // COMPONENTS
-import StartupDashboard from "./Component/StartupDashboard";
-import CreateProjectForm from "./Component/StartupDashboard";
-import SubmitProject from "./Component/StartupDashboard";
+import StartupDashboard from "./pages/StartupDashboard";
+import CreateProjectForm from "./pages/CreateProjectForm";
+import SubmitProject from "./pages/StartupDashboard";
 
 function App() {
   return (

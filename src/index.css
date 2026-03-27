@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-  /* PRIMARY FONT */
-  --font-sans: "Manrope", sans-serif;
-
   /* SECONDARY FONT */
-  --font-secondary: "Inter", sans-serif;
+  --font-secondary: "Manrope", sans-serif;
+
+  /* PRIMARY FONT */
+  --font-sans: "Inter", sans-serif;
 
   /* PRIMARY COLORS GRADES */
   --color-primary: #0f172a;
