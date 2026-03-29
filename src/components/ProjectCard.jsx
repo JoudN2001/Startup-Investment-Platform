@@ -1,3 +1,7 @@
+// COMPONENTS
+import ProgressBar from "./ProgressBar";
+
+// ICONS
 import { ArrowRight } from "lucide-react";
 
 export default function ProjectCard({
@@ -9,7 +13,7 @@ export default function ProjectCard({
   funded = 45,
 }) {
   return (
-    <div className={"bg-neutral rounded-2xl py-3 px-6 mt-6 md:mt-0"}>
+    <div className={"bg-neutral rounded-2xl py-3 px-6 mt-6 md:mt-0 shadow-xs"}>
       {/* IMAGE & STATUS */}
       <div className={"relative w-full h-48 mb-4"}>
         <img
@@ -32,18 +36,7 @@ export default function ProjectCard({
       <p className={"text-neutral-400 font-medium text-base/6"}>
         {description}
       </p>
-      <div className={"flex justify-between pt-4 pb-2.5 font-secondary"}>
-        <h5 className={"text-xs font-bold tracking-widest"}>FUNDING GOAL</h5>
-        <span className={"text-xs font-bold tracking-widest"}>{goal}</span>
-      </div>
-      <div className={"w-full bg-neutral rounded-full h-1.5 mb-4 "}>
-        <div
-          className={
-            "bg-linear-to-r from-tertiary-200 to-tertiary-600 h-1.5 rounded-full"
-          }
-          style={{ width: `${funded}%` }}
-        ></div>
-      </div>
+      <ProgressBar percentageBar={funded} percentage={goal}/>
       <hr className={"border-tertiary-900/75 border-x rounded-4xl my-1 "} />
       <div
         className={

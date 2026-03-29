@@ -1,9 +1,18 @@
+// COMPONENTS
 import MobileNavBar from "../components/MobileNavBar";
 import Header from "../components/Header";
 import ProjectCard from "../components/ProjectCard";
 import SummaryCard from "../components/SummaryCard";
+import ResponsiveContainer from "../components/ResponsiveContainer";
+import FloatingAddButton from "../components/FloatingAddButton";
 
+// ICONS
 import { Plus } from "lucide-react";
+
+// PAGES LINKS
+import { Link } from "react-router-dom";
+
+// OTHERS
 import { dummyProjects } from "../data/dummyData"; // Testing data
 
 export default function StartupDashboard() {
@@ -22,17 +31,12 @@ export default function StartupDashboard() {
   });
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <div></div>
       <Header />
       {/* MAIN CONTENT */}
-      <div
-        className={
-          "flex flex-col pt-28 lg:pt-32 xl:pt-36 px-6 w-full max-w-5xl mx-auto"
-        }
-      >
+      <ResponsiveContainer>
         <div className={"lg:flex lg:items-center lg:justify-between lg:mb-8  "}>
           {/* OVERVIEW */}
-          <div className={""}>
+          <div>
             <span
               className={
                 "text-neutral-700 font-medium text-xs lg:text-sm tracking-widest"
@@ -56,14 +60,17 @@ export default function StartupDashboard() {
           </div>
           {/* ===== OVERVIEW ===== */}
           {/* ADD NEW PROJECT BUTTON  */}
-          <button className="flex items-center justify-center space-x-2.5 mt-5.5 mb-2.5 bg-primary text-neutral rounded-xl p-4 active:bg-secondary-200">
+          <Link
+            to={"/creation-form"}
+            className="flex items-center justify-center space-x-2.5 mt-5.5 mb-2.5 bg-primary text-neutral rounded-xl p-4 active:bg-secondary-200"
+          >
             <Plus
               className={
                 " text-neutral rounded-full w-6 h-6 stroke-3 lg:w-8 lg:h-8 "
               }
             />
             <span className={"font-bold lg:text-lg"}>Create New Project</span>
-          </button>
+          </Link>
           {/* ===== ADD NEW PROJECT BUTTON  ===== */}
         </div>
         {/* SUMMARY CARDS */}
@@ -83,9 +90,10 @@ export default function StartupDashboard() {
           {projectsCards}
         </div>
         {/* ===== PROJECTS CARDS ===== */}
-      </div>
+      </ResponsiveContainer>
       {/* ====== MAIN CONTENT ===== */}
       <MobileNavBar />
+      <FloatingAddButton />
     </div>
   );
 }

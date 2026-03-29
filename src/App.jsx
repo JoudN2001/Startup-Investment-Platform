@@ -1,18 +1,18 @@
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 // COMPONENTS
 import StartupDashboard from "./pages/StartupDashboard";
 import CreateProjectForm from "./pages/CreateProjectForm";
-import SubmitProject from "./pages/StartupDashboard";
+import SubmitProject from "./pages/SubmitProject";
 
 function App() {
   return (
     <>
-    <Routes>
-      <Route path="/" element={<StartupDashboard/>}/>
-      <Route path="/CreateProjectForm" element={<CreateProjectForm/>}/>
-      <Route path="/SubmitProject" element={<SubmitProject/>}/>
-    </Routes>
+      <Routes>
+        <Route path="/" element={<StartupDashboard />} />
+        <Route path="/creation-form" element={<CreateProjectForm />} />
+        <Route path="/creation-form/submit" element={<SubmitProject />} />
+      </Routes>
     </>
   );
 }
