@@ -43,7 +43,7 @@ export default function Header() {
             DASHBOARD
           </h1>
         </Link>
-        <Link to={"/setting"}>
+        <Link to={"/projects"}>
           <h1
             onClick={() => {
               setSelectedNav("projects");
@@ -53,7 +53,7 @@ export default function Header() {
             PROJECTS
           </h1>
         </Link>
-        <Link to={"setting"}>
+        <Link to={"/setting"}>
           <h1
             onClick={() => {
               setSelectedNav("setting");

@@ -7,10 +7,97 @@ import FileInput from "../components/FileInput";
 // ICONS
 import { ArrowLeft } from "lucide-react";
 
-// PAGES LINKS
-import { Link } from "react-router-dom";
+// REACT ROUTER
+import { Link, useNavigate } from "react-router-dom";
+
+// SHEMA VALIDATION LIBRARY
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// FORM LIBRARY
+import { useForm } from "react-hook-form";
+
+// const project = z.object({
+//   id: z.uuid(),
+//   title: ,
+//   description: ,
+//   status: ,
+//   fundingGoal: ,
+//   fundedPersentage: ,
+//   minmumInvestement: ,
+//   thumbnail:
+// })
+
+// VALIDATION DATA FIELD CHECK
+const createProjectFormSchema = z.object({
+  title: z
+    .string({
+      required_error: "Project name is required!",
+      invalid_type_error: "Project name must be text.",
+    })
+    .min(4, { message: "Too short! Must be at least 4 characters." }),
+  description: z
+    .string({
+      required_error: "Description is required!",
+    })
+    .min(50, "Too short! Must be more than 50 characters.")
+    .max(1000, "Too long! Must be less than 1000 characters."),
+  fundingGoal: z.coerce
+    .number({
+      required_error: "Funding goal is required.",
+      invalid_type_error: "Please enter a valid number.",
+    })
+    .positive("Amount must be greater than zero!"),
+  minmumInvestement: z.coerce
+    .number({
+      required_error: "Minimum investment is required.",
+      invalid_type_error: "Please enter a valid number.",
+    })
+    .positive("Amount must be greater than zero!"),
+  thumbnail: z
+    .any()
+    .refine(
+      (files) => !files || files.length === 0 || files[0]?.size <= 5242880,
+      "Max file size is 5MB.",
+    )
+    .refine(
+      (files) =>
+        !files ||
+        files.length === 0 ||
+        ["image/jpeg", "image/png", "image/webp"].includes(files[0]?.type),
+      "Only .jpg, .png and .webp formats are supported.",
+    )
+    .optional(),
+});
 
 export default function CreateProjectForm() {
+  const navigate = useNavigate();
+  // USEFORM HOOK WITH SECHEMA VALIDATION
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    resetField,
+  } = useForm({
+    resolver: zodResolver(createProjectFormSchema),
+  });
+
+  const thumbnailFile = watch("thumbnail");
+  const hasFile = thumbnailFile && thumbnailFile.length > 0;
+
+  // HANDEL SUBMIT FORM
+  const onSubmit = (data) => {
+    console.log("Form data validated and ready to send!");
+    // navigate("./submit");
+    console.log(data);
+  };
+
+  // SHOW ERROR FORM
+  const onError = (errors) => {
+    console.error(errors);
+  };
+
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
       {/* HEADER & BACK BUTTON */}
@@ -61,25 +148,52 @@ export default function CreateProjectForm() {
         </div>
         {/* ===== TITLE & DESCREPTION ===== */}
         {/* FORM */}
-        <form className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full">
+        <form
+          noValidate
+          onSubmit={handleSubmit(onSubmit, onError)}
+          className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full"
+        >
           <InputFiled
+            type="text"
             title="project name"
             placeholder="e.g. Skyline Residency Phase I"
+            hint=""
+            error={errors.title}
+            {...register("title")}
           />
-          <TextArea />
-          <InputFiled title="funding goal ($)" placeholder="5,000,000$" />
-          <InputFiled title="minimum investement ($)" placeholder="10,000$" />
-          <FileInput />
+          <TextArea error={errors.description} {...register("description")} />
+          <InputFiled
+            type="number"
+            title="funding goal ($)"
+            placeholder="5,000,000$"
+            hint="USD"
+            error={errors.fundingGoal}
+            {...register("fundingGoal")}
+          />
+          <InputFiled
+            type="number"
+            title="minimum investement ($)"
+            placeholder="10,000$"
+            hint="USD"
+            error={errors.minmumInvestement}
+            {...register("minmumInvestement")}
+          />
+          <FileInput
+            error={errors.thumbnail}
+            {...register("thumbnail")}
+            hasFile={hasFile}
+            onClear={() => resetField("thumbnail")}
+          />
           {/* SUBMIT & CANCEL BUTTONS  */}
-          <Link
-            to={"./submit"}
+          <button
+            type="submit"
             className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mt-5.5 mb-2.5 bg-primary text-neutral rounded-xl p-4 active:bg-secondary-200"
           >
             <span className={"font-bold lg:text-lg"}>Submit for Approval</span>
-          </Link>
+          </button>
           <Link
             to={"/"}
-            className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mb-2.5 text-primary rounded-xl p-4"
+            className="flex justify-center max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl w-full mb-2.5 text-primary rounded-xl p-3"
           >
             <span className={"font-bold lg:text-lg"}>Cancel</span>
           </Link>

@@ -4,6 +4,9 @@ import ProgressBar from "./ProgressBar";
 // ICONS
 import { ArrowRight } from "lucide-react";
 
+// REACT ROUTER
+import { Link, useParams } from "react-router-dom";
+
 export default function ProjectCard({
   thumbnail = "https://hips.hearstapps.com/hmg-prod/images/edc100123egan-002-6500742f5feb7.jpg?crop=0.9136xw:1xh;center,top&resize=1200:*",
   status = "published",
@@ -12,6 +15,8 @@ export default function ProjectCard({
   goal = "$1,200,000",
   funded = 45,
 }) {
+  // TODO: DYNAMIC LINK FOR DETAILS OF EACH PROJECT
+  const { projectId } = useParams();
   return (
     <div className={"bg-neutral rounded-2xl py-3 px-6 mt-6 md:mt-0 shadow-xs"}>
       {/* IMAGE & STATUS */}
@@ -36,7 +41,7 @@ export default function ProjectCard({
       <p className={"text-neutral-400 font-medium text-base/6"}>
         {description}
       </p>
-      <ProgressBar percentageBar={funded} percentage={goal}/>
+      <ProgressBar percentageBar={funded} percentage={goal} />
       <hr className={"border-tertiary-900/75 border-x rounded-4xl my-1 "} />
       <div
         className={
@@ -46,14 +51,15 @@ export default function ProjectCard({
         <span className={"text-neutral-500 font-semibold text-sm"}>
           {funded}% Fundend
         </span>
-        <button
+        <Link
+          to={"/project-details/:projectId"}
           className={
             "flex items-center gap-1 font-extrabold hover:text-tertiary-600 transition-colors"
           }
         >
           View Details
           <ArrowRight className={"w-4 h-4 stroke-3"} />
-        </button>
+        </Link>
       </div>
       {/* ===== TITEL & DESCREOPTION + PROGRESS BAR & DETAILS ===== */}
     </div>
