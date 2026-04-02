@@ -89,7 +89,7 @@ export default function CreateProjectForm() {
   // HANDEL SUBMIT FORM
   const onSubmit = (data) => {
     console.log("Form data validated and ready to send!");
-    // navigate("./submit");
+    navigate("./submit");
     console.log(data);
   };
 
