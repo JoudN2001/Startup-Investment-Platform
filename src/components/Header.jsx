@@ -53,12 +53,12 @@ export default function Header({page = "dashboard"}) {
             PROJECTS
           </h1>
         </Link>
-        <Link to={"/setting"}>
+        <Link to={"/settings"}>
           <h1
             onClick={() => {
-              setSelectedNav("setting");
+              setSelectedNav("settings");
             }}
-            className={`hover:text-neutral-300 ${selectedNav === "setting" ? "text-neutral-100" : ""} select-none lg:text-lg transition-all duration-300`}
+            className={`hover:text-neutral-300 ${selectedNav === "settings" ? "text-neutral-100" : ""} select-none lg:text-lg transition-all duration-300`}
           >
             SETTINGS
           </h1>

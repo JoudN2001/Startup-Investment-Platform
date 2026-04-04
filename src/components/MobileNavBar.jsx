@@ -51,7 +51,7 @@ export default function MobileNavBar({page = "dashboard"}) {
             </span>
           </Link>
           <Link
-            to={"/setting"}
+            to={"/settings"}
             onClick={() => {
               setSelectedNav("settings");
             }}

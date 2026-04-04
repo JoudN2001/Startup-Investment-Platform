@@ -22,7 +22,7 @@ function App() {
           <Route path="submit" element={<SubmitProject />} />
         </Route>
         <Route path="/projects" element={<StartupProjects />} />
-        <Route path="/setting" element={<StartupSettings />} />
+        <Route path="/settings" element={<StartupSettings />} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
     </ProjectsProvider>
