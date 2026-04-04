@@ -3,6 +3,8 @@ import StartupDashboard from "./pages/StartupDashboard";
 import CreateProjectForm from "./pages/CreateProjectForm";
 import SubmitProject from "./pages/SubmitProject";
 import NotFound404 from "./pages/NotFound404";
+import StartupProjects from "./pages/StartupProjects";
+import StartupSettings from "./pages/StartupSettings";
 
 // REACT ROUTERs
 import { Route, Routes } from "react-router-dom";
@@ -19,6 +21,8 @@ function App() {
           <Route index element={<CreateProjectForm />} />
           <Route path="submit" element={<SubmitProject />} />
         </Route>
+        <Route path="/projects" element={<StartupProjects />} />
+        <Route path="/setting" element={<StartupSettings />} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
     </ProjectsProvider>

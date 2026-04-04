@@ -7,8 +7,8 @@ import { Bell } from "lucide-react";
 // PAGES LINKS
 import { Link } from "react-router-dom";
 
-export default function Header() {
-  const [selectedNav, setSelectedNav] = useState("dashboard");
+export default function Header({page = "dashboard"}) {
+  const [selectedNav, setSelectedNav] = useState(page);
   return (
     <header className="flex fixed w-full justify-between items-center py-3 px-4 lg:py-6 lg:px-8 bg-neutral shadow-[0_4px_10px_rgba(0,0,0,0.05)] z-50">
       {/* PROFILE & TITLE */}

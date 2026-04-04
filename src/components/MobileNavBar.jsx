@@ -7,8 +7,8 @@ import { useState } from "react";
 // PAGES LINKS
 import { Link } from "react-router-dom";
 
-export default function MobileNavBar() {
-  const [selectedNav, setSelectedNav] = useState("dashboard");
+export default function MobileNavBar({page = "dashboard"}) {
+  const [selectedNav, setSelectedNav] = useState(page);
   return (
     <>
       {/* NAVIGATION BAR */}
