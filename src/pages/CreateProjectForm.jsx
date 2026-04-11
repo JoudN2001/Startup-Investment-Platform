@@ -103,7 +103,7 @@ export default function CreateProjectForm() {
       {/* HEADER & BACK BUTTON */}
       <header className="flex fixed w-full justify-between items-center py-3 px-4 lg:py-6 lg:px-8 bg-neutral shadow-[0_4px_10px_rgba(0,0,0,0.05)] z-50">
         <div className={" flex items-center space-x-3"}>
-          <Link to={"/"}>
+          <Link to={"/startup"}>
             <ArrowLeft
               className={"w-5.5 h-5.5 md:w-6.5 md:h-6.5 lg:w-7 lg:h-7 stroke-3"}
             />
@@ -192,7 +192,7 @@ export default function CreateProjectForm() {
             <span className={"font-bold lg:text-lg"}>Submit for Approval</span>
           </button>
           <Link
-            to={"/"}
+            to={"/startup/creation-form/submit"}
             className="flex justify-center max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl w-full mb-2.5 text-primary rounded-xl p-3"
           >
             <span className={"font-bold lg:text-lg"}>Cancel</span>

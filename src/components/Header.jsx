@@ -7,10 +7,10 @@ import { Bell } from "lucide-react";
 // PAGES LINKS
 import { Link } from "react-router-dom";
 
-export default function Header({page = "dashboard"}) {
+export default function Header({page = "dashboard", title, responsive = true }) {
   const [selectedNav, setSelectedNav] = useState(page);
   return (
-    <header className="flex fixed w-full justify-between items-center py-3 px-4 lg:py-6 lg:px-8 bg-neutral shadow-[0_4px_10px_rgba(0,0,0,0.05)] z-50">
+    <header  className={`flex ${responsive? "lg:" : "lg:hidden"} fixed w-full justify-between items-center py-3 px-4 lg:py-6 lg:px-8 bg-neutral shadow-[0_4px_10px_rgba(0,0,0,0.05)] z-50`}>
       {/* PROFILE & TITLE */}
       <div className={" flex items-center space-x-3"}>
         <div
@@ -23,7 +23,7 @@ export default function Header({page = "dashboard"}) {
           </span>
         </div>
         <span className={"text-xl xl:text-2xl font-bold"}>
-          Startup Dashboard
+          {title}
         </span>
       </div>
       {/* ===== PROFILE & TITLE ===== */}
