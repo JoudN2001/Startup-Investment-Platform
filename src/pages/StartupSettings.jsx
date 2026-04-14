@@ -6,7 +6,7 @@ import ResponsiveContainer from "../components/ResponsiveContainer";
 export default function StartupSetting() {
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header page="settings" title={"Startup Dashboard"} />
+      <Header title={"Startup Dashboard"} />
       {/* MAIN CONTENT */}
       <ResponsiveContainer></ResponsiveContainer>
       {/* ====== MAIN CONTENT ===== */}

@@ -3,6 +3,8 @@ import MobileNavBar from "../components/MobileNavBar";
 import Header from "../components/Header";
 import ResponsiveContainer from "../components/ResponsiveContainer";
 import ProjectCard from "../components/ProjectCard";
+import DesktopNavBar from "../components/DesktopNavBar";
+import DesktopAdminHeader from "../components/DesktopAdminHeader";
 
 // HOOKS
 import { useProjects } from "../contexts/ProjectsContext";
@@ -23,8 +25,10 @@ const AdminApprovals = () => {
     );
   });
   return (
-    <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header title={"Admin Dashboard"} responsive={false}/>
+    <div className={"bg-neutral-950 w-full min-h-dvh lg:pl-72"}>
+      <Header title={"Admin Dashboard"} responsive={false} />
+      <DesktopAdminHeader />
+      <DesktopNavBar title="investment portal" />
       {/* MAIN CONTENT */}
       <ResponsiveContainer>
         {/* PROJECTS CARDS */}

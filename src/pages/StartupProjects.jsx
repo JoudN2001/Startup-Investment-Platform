@@ -24,7 +24,7 @@ export default function StartupProjects() {
     });
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header page="projects" title={"Startup Dashboard"} />
+      <Header title={"Startup Dashboard"} />
       {/* MAIN CONTENT */}
       <ResponsiveContainer>
         {/* PROJECTS CARDS */}
