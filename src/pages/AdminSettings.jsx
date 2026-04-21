@@ -8,13 +8,13 @@ import DesktopNavBar from "../components/DesktopNavBar";
 const AdminSetting = () => {
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header title={"Admin Dashboard"} responsive={false} />
+      <Header title={"Admin Dashboard"} role={"admin"} />
       <DesktopAdminHeader />
       <DesktopNavBar title="investment portal" />
       {/* MAIN CONTENT */}
       <ResponsiveContainer></ResponsiveContainer>
       {/* ====== MAIN CONTENT ===== */}
-      <MobileNavBar groupPage="admin" />
+      <MobileNavBar role="admin" />
     </div>
   );
 };

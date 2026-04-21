@@ -14,7 +14,7 @@ const AdminDashboard = () => {
   const data = useProjects();
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header title={"Admin Dashboard"} responsive={false} />
+      <Header title={"Admin Dashboard"} role={"admin"} />
       <DesktopAdminHeader />
       <DesktopNavBar title="investment portal" />
       <ResponsiveContainer>
@@ -79,7 +79,7 @@ const AdminDashboard = () => {
           {/* ===== PROJECTS LIST ===== */}
         </main>
       </ResponsiveContainer>
-      <MobileNavBar groupPage="admin" />
+      <MobileNavBar role="admin" />
     </div>
   );
 };

@@ -8,23 +8,25 @@ import ProjectCard from "../components/ProjectCard";
 import { useProjects } from "../contexts/ProjectsContext";
 
 export default function StartupProjects() {
-  const data = useProjects()
+  const data = useProjects();
   const projectsCards = data.map((p) => {
-      return (
-        <ProjectCard
-          key={p.id}
-          thumbnail={p.thumbnail}
-          status={p.status}
-          title={p.title}
-          description={p.description}
-          goal={p.goal}
-          funded={p.funded}
-        />
-      );
-    });
+    return (
+      <ProjectCard
+        key={p.id}
+        projectId={p.id}
+        thumbnail={p.thumbnail}
+        status={p.status}
+        title={p.title}
+        description={p.description}
+        goal={p.goal}
+        funded={p.funded}
+        role={"startup"}
+      />
+    );
+  });
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header title={"Startup Dashboard"} />
+      <Header title={"Startup Dashboard"} role={"startup"} />
       {/* MAIN CONTENT */}
       <ResponsiveContainer>
         {/* PROJECTS CARDS */}
@@ -38,7 +40,7 @@ export default function StartupProjects() {
         {/* ===== PROJECTS CARDS ===== */}
       </ResponsiveContainer>
       {/* ====== MAIN CONTENT ===== */}
-      <MobileNavBar groupPage="startup" />
+      <MobileNavBar role="startup" />
     </div>
   );
 }

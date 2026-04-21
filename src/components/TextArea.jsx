@@ -11,6 +11,7 @@ const TextArea = forwardRef(
       placeholder = "Provide a detailed overview of the investment opportunity...",
       hint = "",
       error,
+      bgColor = "bg-neutral",
       ...rest
     },
     ref,
@@ -49,8 +50,8 @@ const TextArea = forwardRef(
               }
               className={
                 error
-                  ? "border-2 border-error focus:border-error focus:ring-error py-4 sm:py-5 px-4 block w-full lg:h-16 bg-neutral rounded-lg font-semibold sm:text-xs lg:text-sm text-primary placeholder:text-neutral-700 disabled:opacity-50 disabled:pointer-events-none [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thumb"
-                  : "py-4 sm:py-5 px-4 block w-full lg:h-16 bg-neutral rounded-lg font-semibold sm:text-xs lg:text-sm text-primary placeholder:text-neutral-700 disabled:opacity-50 disabled:pointer-events-none [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thumb"
+                  ? `border-2 border-error focus:border-error focus:ring-error py-4 sm:py-5 px-4 block w-full lg:h-16 ${bgColor} rounded-lg font-semibold sm:text-xs lg:text-sm text-primary placeholder:text-neutral-700 disabled:opacity-50 disabled:pointer-events-none [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thumb`
+                  : `py-4 sm:py-5 px-4 block w-full lg:h-16 ${bgColor} rounded-lg font-semibold sm:text-xs lg:text-sm text-primary placeholder:text-neutral-700 disabled:opacity-50 disabled:pointer-events-none [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thumb`
               }
               required
               aria-describedby={

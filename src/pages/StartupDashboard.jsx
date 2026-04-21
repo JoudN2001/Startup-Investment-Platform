@@ -21,18 +21,20 @@ export default function StartupDashboard() {
     return (
       <ProjectCard
         key={p.id}
+        projectId={p.id}
         thumbnail={p.thumbnail}
         status={p.status}
         title={p.title}
         description={p.description}
         goal={p.goal}
         funded={p.funded}
+        role={"startup"}
       />
     );
   });
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header title={"Startup Dashboard"} />
+      <Header title={"Startup Dashboard"} role={"startup"} />
       {/* MAIN CONTENT */}
       <ResponsiveContainer>
         <div className={"lg:flex lg:items-center lg:justify-between lg:mb-8  "}>
@@ -93,7 +95,7 @@ export default function StartupDashboard() {
         {/* ===== PROJECTS CARDS ===== */}
       </ResponsiveContainer>
       {/* ====== MAIN CONTENT ===== */}
-      <MobileNavBar groupPage="startup" />
+      <MobileNavBar role="startup" />
       <FloatingAddButton />
     </div>
   );

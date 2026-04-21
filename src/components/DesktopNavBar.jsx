@@ -39,7 +39,10 @@ const DesktopNavBar = ({ title }) => {
       <ul className="flex flex-col justify-center gap-y-3 w-1/5">
         {navLinks.map((link) => {
           const Icon = link.icon;
-          const isActive = currentPath === link.path;
+          const isRoot = link.path === "/admin" || link.path === "/startup";
+          const isActive = isRoot
+            ? currentPath === link.path
+            : currentPath.startsWith(link.path);
           return (
             <Link
               key={link.id}

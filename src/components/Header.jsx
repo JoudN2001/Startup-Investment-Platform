@@ -4,29 +4,56 @@ import { Bell } from "lucide-react";
 // PAGES LINKS
 import { Link, useLocation } from "react-router-dom";
 
-const navLinks = [
-  {
-    id: "dashboard",
-    label: "dashboard",
-    path: "/startup",
-  },
-  {
-    id: "projects",
-    label: "projects",
-    path: "/startup/projects",
-  },
-  {
-    id: "settings",
-    label: "settings",
-    path: "/startup/settings",
-  },
-];
-export default function Header({ title, responsive = true }) {
+export default function Header({ title, role }) {
+  let navLinks = [];
+  switch (role) {
+    case "startup":
+      navLinks = [
+        {
+          id: "dashboard",
+          label: "dashboard",
+          path: "/startup",
+        },
+        {
+          id: "projects",
+          label: "projects",
+          path: "/startup/projects",
+        },
+        {
+          id: "settings",
+          label: "settings",
+          path: "/startup/settings",
+        },
+      ];
+      break;
+    case "admin":
+      navLinks = [
+        {
+          id: "dashboard",
+          label: "overview",
+          path: "/admin",
+        },
+        {
+          id: "approvals",
+          label: "approvals",
+          path: "/admin/approvals",
+        },
+        {
+          id: "settings",
+          label: "settings",
+          path: "/admin/settings",
+        },
+      ];
+      break;
+    default:
+      navLinks = [];
+  }
   const location = useLocation();
   const currentPath = location.pathname;
+
   return (
     <header
-      className={`flex ${responsive ? "lg:" : "lg:hidden"} fixed w-full justify-between items-center py-3 px-4 lg:py-6 lg:px-8 bg-neutral shadow-[0_4px_10px_rgba(0,0,0,0.05)] z-50`}
+      className={`flex ${role === "admin" ? "lg:hidden" : "lg:"} fixed w-full justify-between items-center py-3 px-4 lg:py-6 lg:px-8 bg-neutral shadow-[0_4px_10px_rgba(0,0,0,0.05)] z-50`}
     >
       {/* PROFILE & TITLE */}
       <div className={" flex items-center space-x-3"}>
@@ -45,7 +72,10 @@ export default function Header({ title, responsive = true }) {
       {/* NAVIGATION DESCKTOP */}
       <nav className="hidden md:flex space-x-4 md:space-x-6 lg:space-x-8 xl:space-x-12 text-neutral-500 font-semibold">
         {navLinks.map((link) => {
-          let isActive = link.path === currentPath;
+          let isRoot = link.path === "/admin" || link.path === "/startup";
+          let isActive = isRoot
+            ? currentPath === link.path
+            : currentPath.startsWith(link.path);
           return (
             <Link to={link.path} key={link.id}>
               <h1

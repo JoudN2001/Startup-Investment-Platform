@@ -15,20 +15,22 @@ const AdminApprovals = () => {
     return (
       <ProjectCard
         key={p.id}
+        projectId={p.id}
         thumbnail={p.thumbnail}
         status={p.status}
         title={p.title}
         description={p.description}
         goal={p.goal}
         funded={p.funded}
+        role={"admin"}
       />
     );
   });
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh lg:pl-72"}>
-      <Header title={"Admin Dashboard"} responsive={false} />
+      <Header title={"Admin Dashboard"} role={"admin"} />
       <DesktopAdminHeader />
-      <DesktopNavBar title="investment portal" />
+      <DesktopNavBar title="investment portal" role={"admin"}/>
       {/* MAIN CONTENT */}
       <ResponsiveContainer>
         {/* PROJECTS CARDS */}
@@ -42,7 +44,7 @@ const AdminApprovals = () => {
         {/* ===== PROJECTS CARDS ===== */}
       </ResponsiveContainer>
       {/* ====== MAIN CONTENT ===== */}
-      <MobileNavBar groupPage="admin" />
+      <MobileNavBar role="admin" />
     </div>
   );
 };

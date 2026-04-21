@@ -78,7 +78,7 @@ export const dummyProjects = [
     status: "done",
     goal: "$2,800,000",
     funded: 100,
-    thumbnail: "https://agriculture.auburn.edu/wp-content/uploads/2022/09/Plant-based-meat-Joel-Cuffey-20220927-scaled.jpeg"
+    thumbnail: "https://www.genengnews.com/wp-content/uploads/2022/08/GettyImages-1249967801-scaled.jpg"
   },
   {
     id: 10,

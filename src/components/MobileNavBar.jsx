@@ -4,13 +4,13 @@ import { LayoutDashboard, Settings, FolderTree, ListTodo } from "lucide-react";
 // REACT ROUTER
 import { Link, useLocation } from "react-router-dom";
 
-export default function MobileNavBar({ groupPage }) {
+export default function MobileNavBar({ role }) {
   const location = useLocation();
   const currentPath = location.pathname;
-  
+
   // NAV LINKS GROUP
   let navLinks = [];
-  switch (groupPage) {
+  switch (role) {
     case "startup":
       navLinks = [
         {
@@ -69,7 +69,10 @@ export default function MobileNavBar({ groupPage }) {
       <div className={"flex justify-around "}>
         {navLinks.map((link) => {
           const Icon = link.icon;
-          const isActive = currentPath === link.path;
+          const isRoot = link.path === "/admin" || link.path === "/startup";
+          const isActive = isRoot
+            ? currentPath === link.path
+            : currentPath.startsWith(link.path);
           return (
             <Link
               key={link.id}

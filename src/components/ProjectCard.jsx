@@ -5,18 +5,18 @@ import ProgressBar from "./ProgressBar";
 import { ArrowRight } from "lucide-react";
 
 // REACT ROUTER
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function ProjectCard({
+  projectId,
   thumbnail = "https://hips.hearstapps.com/hmg-prod/images/edc100123egan-002-6500742f5feb7.jpg?crop=0.9136xw:1xh;center,top&resize=1200:*",
   status = "published",
   title = "Architecture Office",
   description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit alias illo dolorem.",
   goal = "$1,200,000",
   funded = 45,
+  role,
 }) {
-  // TODO: DYNAMIC LINK FOR DETAILS OF EACH PROJECT
-  const { projectId } = useParams();
   return (
     <div className={"bg-neutral rounded-2xl py-3 px-6 mt-6 md:mt-0 shadow-xs"}>
       {/* IMAGE & STATUS */}
@@ -52,7 +52,7 @@ export default function ProjectCard({
           {funded}% Fundend
         </span>
         <Link
-          to={"/project-details/:projectId"}
+          to={ role === "admin" ? `/admin/approvals/project-details/${projectId}` :`/startup/projects/project-details/${projectId}`}
           className={
             "flex items-center gap-1 font-extrabold hover:text-tertiary-600 transition-colors"
           }
