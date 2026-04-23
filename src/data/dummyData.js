@@ -1,7 +1,3 @@
-// TODO:Edge cases:
-// Progress Bar 150% at proj-013
-// Rejected at proj-012
-// No image at proj-011
 
 export const dummyProjects = [
   {

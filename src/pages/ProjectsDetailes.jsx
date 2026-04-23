@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 // EXTERNAL LIBRARYS
 import { v4 as uuidv4 } from "uuid";
 
-const ProjectsDetailes = () => {
+const ProjectsDetailes = ({ role }) => {
   const { projectId } = useParams();
   const { projects } = useProjects();
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ const ProjectsDetailes = () => {
       if (p.id === selectedProject.id)
         return {
           ...selectedProject,
-          status: "approved",
+          status: "published",
           adminFeedback: feedback,
           updatedAt: new Date().toISOString(),
         };
@@ -94,6 +94,7 @@ const ProjectsDetailes = () => {
       if (p.id === selectedProject.id)
         return {
           ...selectedProject,
+          status: "pendding",
           adminFeedback: feedback,
           updatedAt: new Date().toISOString(),
         };
@@ -105,12 +106,14 @@ const ProjectsDetailes = () => {
 
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header title={"Project Details"} role={"admin"} />
-      <DesktopAdminHeader />
-      <DesktopNavBar title="investment portal" role={"admin"} />
+      <Header title={"Project Details"} role={role} />
+      {role === "admin" && <DesktopAdminHeader />}
+      {role === "admin" && (
+        <DesktopNavBar title="investment portal" role={"admin"} />
+      )}
       <ResponsiveContainer>
         {/* PROJECTS DETAILS */}
-        <main className="lg:pl-72">
+        <main className={`${role === "admin" ? "lg:pl-72" : ""}`}>
           {/* IMAGE + TITLE */}
           <div className="flex relative max-h-1/6">
             <img
@@ -146,13 +149,12 @@ const ProjectsDetailes = () => {
           </p>
           {/* DETAILS CARDS */}
           <div className="md:grid grid-cols-2 gap-5 my-5">
-            {/* TODO: some data must be <HighlightedCard />  */}
+            {/* EXTRA FEAT: some data must be <HighlightedCard />  */}
             <DetailsCard
               label={"finding goal"}
               goal={formattedGoal}
               funded={fundPercent}
             />
-            {/* TODO: more data must cumming from form */}
             <DetailsCard
               label={"minimum investement"}
               goal={formattedMinInvest}
@@ -174,54 +176,62 @@ const ProjectsDetailes = () => {
               </div>
             </div>
             {/* ====== ATTACHED FILES ====== */}
+
+            {/* AUDIT DECISION FORM */}
             <div className="max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto w-full bg-neutral rounded-2xl py-2 sm:py-3 px-5 sm:px-7 mt-6 lg:mt-0 mb-5">
               <h1 className={`text-3xl font-bold my-2 pb-1 `}>
-                Audit Decision
+                {role === "admin" ? "Audit Decision" : "Admin Feedback"}
               </h1>
               <p className="mt-3 mb-5 text-neutral-600 font-bold text-sm font-secondary">
-                Review all materials before making a final determination.
-                Feedback will be visible to the project lead.
+                {role === "admin"
+                  ? "Review all materials before making a final determination. Feedback will be visible to the project lead."
+                  : selectedProject.adminFeedback
+                    ? selectedProject.adminFeedback
+                    : "No feedback on your project "}
               </p>
-              <form onSubmit={handelOnSubmit}>
-                <Textarea
-                  title="ADMIN NOTES & PUBLIC FEEDBACK"
-                  description="Provide detailed reasons if rejecting or requesting revisions..."
-                  hint="OPTIONAL"
-                  bgColor="bg-neutral-950"
-                  value={feedback}
-                  onChange={(e) => {
-                    setFeedback(e.target.value);
-                  }}
-                />
-                <div className="flex flex-col gap-3 mb-4">
-                  <button
-                    type="submit"
-                    className="flex items-center justify-center gap-2 text-neutral font-semibold bg-success py-2 mt-3 w-full rounded-lg"
-                  >
-                    <Check />
-                    Approve Project
-                  </button>
-                  <div className="flex gap-2 justify-between w-full">
+              {role === "admin" && (
+                <form onSubmit={handelOnSubmit}>
+                  <Textarea
+                    title="ADMIN NOTES & PUBLIC FEEDBACK"
+                    description="Provide detailed reasons if rejecting or requesting revisions..."
+                    hint="OPTIONAL"
+                    bgColor="bg-neutral-950"
+                    value={feedback}
+                    onChange={(e) => {
+                      setFeedback(e.target.value);
+                    }}
+                  />
+                  <div className="flex flex-col gap-3 mb-4">
                     <button
-                      type="button"
-                      onClick={handelOnRevision}
-                      className="flex flex-1 items-center justify-center gap-2 text-error font-semibold bg-neutral border-amber-500 border-2 py-2 px-2 rounded-lg"
+                      type="submit"
+                      className="flex items-center justify-center gap-2 text-neutral font-semibold bg-success py-2 mt-3 w-full rounded-lg"
                     >
-                      <SquarePen />
-                      Revision
+                      <Check />
+                      Approve Project
                     </button>
-                    <button
-                      type="button"
-                      onClick={handelOnReject}
-                      className="flex flex-1 items-center justify-center gap-2 text-neutral font-semibold bg-error py-2 px-2 rounded-lg"
-                    >
-                      <X />
-                      Reject
-                    </button>
+                    <div className="flex gap-2 justify-between w-full">
+                      <button
+                        type="button"
+                        onClick={handelOnRevision}
+                        className="flex flex-1 items-center justify-center gap-2 text-error font-semibold bg-neutral border-amber-500 border-2 py-2 px-2 rounded-lg"
+                      >
+                        <SquarePen />
+                        Revision
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handelOnReject}
+                        className="flex flex-1 items-center justify-center gap-2 text-neutral font-semibold bg-error py-2 px-2 rounded-lg"
+                      >
+                        <X />
+                        Reject
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </form>
+                </form>
+              )}
             </div>
+            {/* ===== AUDIT DECISION FORM ===== */}
             <LastAction lastUpdate={lastUpdate} />
           </div>
 
@@ -238,7 +248,61 @@ const ProjectsDetailes = () => {
                 <LastAction lastUpdate={lastUpdate} />
               </div>
             </div>
-            {/* <AuditDecision /> */}
+            {/* AUDIT DECISION FORM */}
+            <div className="max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto w-full bg-neutral rounded-2xl py-2 sm:py-3 px-5 sm:px-7 mt-6 lg:mt-0 mb-5">
+              <h1 className={`text-3xl font-bold my-2 pb-1 `}>
+                {role === "admin" ? "Audit Decision" : "Admin Feedback"}
+              </h1>
+              <p className="mt-3 mb-5 text-neutral-600 font-bold text-sm font-secondary">
+                {role === "admin"
+                  ? "Review all materials before making a final determination. Feedback will be visible to the project lead."
+                  : selectedProject.adminFeedback
+                    ? selectedProject.adminFeedback
+                    : "No feedback on your project "}
+              </p>
+              {role === "admin" && (
+                <form onSubmit={handelOnSubmit}>
+                  <Textarea
+                    title="ADMIN NOTES & PUBLIC FEEDBACK"
+                    description="Provide detailed reasons if rejecting or requesting revisions..."
+                    hint="OPTIONAL"
+                    bgColor="bg-neutral-950"
+                    value={feedback}
+                    onChange={(e) => {
+                      setFeedback(e.target.value);
+                    }}
+                  />
+                  <div className="flex flex-col gap-3 mb-4">
+                    <button
+                      type="submit"
+                      className="flex items-center justify-center gap-2 text-neutral font-semibold bg-success py-2 mt-3 w-full rounded-lg"
+                    >
+                      <Check />
+                      Approve Project
+                    </button>
+                    <div className="flex gap-2 justify-between w-full">
+                      <button
+                        type="button"
+                        onClick={handelOnRevision}
+                        className="flex flex-1 items-center justify-center gap-2 text-error font-semibold bg-neutral border-amber-500 border-2 py-2 px-2 rounded-lg"
+                      >
+                        <SquarePen />
+                        Revision
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handelOnReject}
+                        className="flex flex-1 items-center justify-center gap-2 text-neutral font-semibold bg-error py-2 px-2 rounded-lg"
+                      >
+                        <X />
+                        Reject
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              )}
+            </div>
+            {/* ===== AUDIT DECISION FORM ===== */}
           </div>
           {/* ===== DESKTOP AND TABLET DECISITION + FILES ===== */}
         </main>

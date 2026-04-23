@@ -29,7 +29,7 @@ function App() {
           </Route>
           <Route path="projects">
             <Route index element={<StartupProjects />} />
-            <Route path="project-details/:projectId" element={<></>} />
+            <Route path="project-details/:projectId" element={<ProjectsDetailes role="startup" />} />
           </Route>
           <Route path="settings" element={<StartupSettings />} />
         </Route>
@@ -42,7 +42,7 @@ function App() {
             <Route index element={<AdminApprovals />} />
             <Route
               path="project-details/:projectId"
-              element={<ProjectsDetailes />}
+              element={<ProjectsDetailes role="admin" />}
             />
           </Route>
           <Route path="settings" element={<AdminSettings />} />

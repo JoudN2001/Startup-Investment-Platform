@@ -28,7 +28,6 @@ export default function ProjectCard({
             alt="Project Thumbnail"
           />
           <span className="absolute top-3 right-3 bg-neutral-900/60 text-neutral-400 backdrop-blur-xl py-1 px-2 text-xs font-semibold rounded-full">
-            {/* TODO: STATUS CIRCLE AND OTHER STATUS (DONE, PENDDING, REJECTED, ETC...) */}
             {status.toUpperCase()}
           </span>
         </div>
@@ -38,7 +37,6 @@ export default function ProjectCard({
       <div className="flex justify-between items-center">
         <h1 className={"text-3xl font-bold my-2 max-w-2/3 truncate"}>{title}</h1>
         {!thumbnail && <span className="bg-neutral-900/60 text-neutral-400 backdrop-blur-xl py-1 px-2 text-xs font-semibold rounded-full">
-          {/* TODO: STATUS CIRCLE AND OTHER STATUS (DONE, PENDDING, REJECTED, ETC...) */}
           {status.toUpperCase()}
         </span>}
       </div>
@@ -49,7 +47,7 @@ export default function ProjectCard({
       <hr className={"border-tertiary-900/75 border-x rounded-4xl my-1 "} />
       <div
         className={
-          "flex justify-between items-center pt-0.5 pb-1.5 font-secondary"
+          "flex justify-between items-center pt-2.5 pb-1.5 font-secondary"
         }
       >
         <span className={"text-neutral-500 font-semibold text-sm"}>

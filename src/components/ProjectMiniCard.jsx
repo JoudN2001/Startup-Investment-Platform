@@ -22,7 +22,6 @@ export default function ProjectMiniCard({
         <div className="flex justify-between items-center">
           <h1 className="text-lg truncate max-w-2/3 font-bold my-2">{title}</h1>
           <span className="shrink-0 bg-neutral-900/60 text-neutral-400 backdrop-blur-xl max-[360px]:py-0.5 py-1 max-[360px]:px-1 px-1.5 text-[10px] font-semibold rounded-full">
-            {/* TODO: STATUS CIRCLE AND OTHER STATUS (DONE, PENDDING, REJECTED, ETC...) */}
             {status.toUpperCase()}
           </span>
         </div>
