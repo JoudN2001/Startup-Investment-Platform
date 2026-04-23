@@ -25,5 +25,7 @@ const ProjectsProvider = ({ children }) => {
   );
 };
 
-const useProjects = () => useContext(ProjectsContext);
-export { ProjectsProvider, useProjects };
+// eslint-disable-next-line react-refresh/only-export-components
+export const useProjects = () => {
+  return useContext(ProjectsContext);
+};export { ProjectsProvider };

@@ -18,7 +18,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // FORM LIBRARY
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 // EXTERNAL LIBRARYS
 import { v4 as uuidv4 } from "uuid";
@@ -84,14 +84,14 @@ export default function CreateProjectForm() {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
+    control,
     resetField,
   } = useForm({
     resolver: zodResolver(createProjectFormSchema),
   });
 
-  const thumbnailFile = watch("thumbnail");
-  const documentsFile = watch("files");
+  const thumbnailFile = useWatch({ control, name: "thumbnail" });
+  const documentsFile = useWatch({ control, name: "files" });
   const hasThumbnail = thumbnailFile && thumbnailFile.length > 0;
   const hasDocuments = documentsFile && documentsFile.length > 0;
 
