@@ -15,7 +15,7 @@ const FileInput = forwardRef(
     ref,
   ) => {
     return (
-      <div className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full space-y-3">
+      <div className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full space-y-3 mb-6">
         {/* ===== FILE LABEL ===== */}
         <div className="mb-3 lg:mb-4 flex flex-wrap justify-between items-center gap-2">
           <label

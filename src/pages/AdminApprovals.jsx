@@ -10,18 +10,24 @@ import DesktopAdminHeader from "../components/DesktopAdminHeader";
 import { useProjects } from "../contexts/ProjectsContext";
 
 const AdminApprovals = () => {
-  const data = useProjects();
-  const projectsCards = data.map((p) => {
+  const {projects} = useProjects();
+  const projectsCards = projects.map((p) => {
+    const formattedGoal = new Intl.NumberFormat("en", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    }).format(Number(p.goal));
+    const fundPercent = (Number(p.currentRaised) / Number(p.goal) * 100) || 0;
     return (
       <ProjectCard
         key={p.id}
         projectId={p.id}
-        thumbnail={p.thumbnail}
-        status={p.status}
         title={p.title}
         description={p.description}
-        goal={p.goal}
-        funded={p.funded}
+        status={p.status}
+        thumbnail={p.thumbnailUrl}
+        goal={formattedGoal}
+        funded={fundPercent}
         role={"admin"}
       />
     );
@@ -30,7 +36,7 @@ const AdminApprovals = () => {
     <div className={"bg-neutral-950 w-full min-h-dvh lg:pl-72"}>
       <Header title={"Admin Dashboard"} role={"admin"} />
       <DesktopAdminHeader />
-      <DesktopNavBar title="investment portal" role={"admin"}/>
+      <DesktopNavBar title="investment portal" role={"admin"} />
       {/* MAIN CONTENT */}
       <ResponsiveContainer>
         {/* PROJECTS CARDS */}

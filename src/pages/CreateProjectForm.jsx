@@ -10,6 +10,9 @@ import { ArrowLeft } from "lucide-react";
 // REACT ROUTER
 import { Link, useNavigate } from "react-router-dom";
 
+// CONTEXTS
+import { useProjects } from "../contexts/ProjectsContext";
+
 // SHEMA VALIDATION LIBRARY
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,61 +20,65 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // FORM LIBRARY
 import { useForm } from "react-hook-form";
 
-// const project = z.object({
-//   id: z.uuid(),
-//   title: ,
-//   description: ,
-//   status: ,
-//   fundingGoal: ,
-//   fundedPersentage: ,
-//   minmumInvestement: ,
-//   thumbnail:
-// })
+// EXTERNAL LIBRARYS
+import { v4 as uuidv4 } from "uuid";
 
 // VALIDATION DATA FIELD CHECK
-const createProjectFormSchema = z.object({
-  title: z
-    .string({
-      required_error: "Project name is required!",
-      invalid_type_error: "Project name must be text.",
-    })
-    .min(4, { message: "Too short! Must be at least 4 characters." }),
-  description: z
-    .string({
-      required_error: "Description is required!",
-    })
-    .min(50, "Too short! Must be more than 50 characters.")
-    .max(1000, "Too long! Must be less than 1000 characters."),
-  fundingGoal: z.coerce
-    .number({
-      required_error: "Funding goal is required.",
-      invalid_type_error: "Please enter a valid number.",
-    })
-    .positive("Amount must be greater than zero!"),
-  minmumInvestement: z.coerce
-    .number({
-      required_error: "Minimum investment is required.",
-      invalid_type_error: "Please enter a valid number.",
-    })
-    .positive("Amount must be greater than zero!"),
-  thumbnail: z
-    .any()
-    .refine(
-      (files) => !files || files.length === 0 || files[0]?.size <= 5242880,
-      "Max file size is 5MB.",
-    )
-    .refine(
-      (files) =>
-        !files ||
-        files.length === 0 ||
-        ["image/jpeg", "image/png", "image/webp"].includes(files[0]?.type),
-      "Only .jpg, .png and .webp formats are supported.",
-    )
-    .optional(),
-});
+const createProjectFormSchema = z.object(
+  {
+    title: z
+      .string({
+        required_error: "Project name is required!",
+        invalid_type_error: "Project name must be text.",
+      })
+      .min(4, { message: "Too short! Must be at least 4 characters." }),
+    description: z
+      .string({
+        required_error: "Description is required!",
+      })
+      .min(100, "Too short! Must be more than 100 characters.")
+      .max(10000, "Too long! Must be less than 10000 characters."),
+    fundingGoal: z.coerce
+      .number({
+        required_error: "Funding goal is required.",
+        invalid_type_error: "Please enter a valid number.",
+      })
+      .positive("Amount must be greater than zero!"),
+    minmumInvestement: z.coerce
+      .number({
+        required_error: "Minimum investment is required.",
+        invalid_type_error: "Please enter a valid number.",
+      })
+      .positive("Amount must be greater than zero!"),
+    thumbnail: z
+      .any()
+      .refine(
+        (files) => !files || files.length === 0 || files[0]?.size <= 5242880,
+        "Max file size is 5MB.",
+      )
+      .refine(
+        (files) =>
+          !files ||
+          files.length === 0 ||
+          ["image/jpeg", "image/png", "image/webp"].includes(files[0]?.type),
+        "Only .jpg, .png and .webp formats are supported.",
+      )
+      .optional(),
+    files: z
+      .any()
+      .refine(
+        (files) => !files || files.length === 0 || files[0]?.size <= 26214400,
+        "Max file size is 25MB.",
+      )
+      .optional(),
+  }).refine((data) => data.minmumInvestement < data.fundingGoal, {
+    message: "Minimum investment must be strictly less than the funding goal.",
+    path: ["minmumInvestement"],
+  });
 
 export default function CreateProjectForm() {
   const navigate = useNavigate();
+  const { projects } = useProjects();
   // USEFORM HOOK WITH SECHEMA VALIDATION
   const {
     register,
@@ -84,13 +91,32 @@ export default function CreateProjectForm() {
   });
 
   const thumbnailFile = watch("thumbnail");
-  const hasFile = thumbnailFile && thumbnailFile.length > 0;
+  const documentsFile = watch("files");
+  const hasThumbnail = thumbnailFile && thumbnailFile.length > 0;
+  const hasDocuments = documentsFile && documentsFile.length > 0;
+
 
   // HANDEL SUBMIT FORM
   const onSubmit = (data) => {
+    // TODO: Files and thumbnail must be as link or create backend
+    const newProject = {
+      id: uuidv4(),
+      title: data.title,
+      description: data.description,
+      status: "pending",
+      thumbnailUrl: "",
+      attachedFilesUrls: [],
+      goal: data.fundingGoal,
+      minInvest: data.minmumInvestement,
+      currentRaised: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: "",
+      adminFeedback: "",
+      investors: [],
+    };
     console.log("Form data validated and ready to send!");
     navigate("./submit");
-    console.log(data);
+    localStorage.setItem("projects", JSON.stringify([...projects, newProject]));
   };
 
   // SHOW ERROR FORM
@@ -172,7 +198,7 @@ export default function CreateProjectForm() {
           />
           <InputFiled
             type="number"
-            title="minimum investement ($)"
+            title="minimum investment ($)"
             placeholder="10,000$"
             hint="USD"
             error={errors.minmumInvestement}
@@ -181,13 +207,21 @@ export default function CreateProjectForm() {
           <FileInput
             error={errors.thumbnail}
             {...register("thumbnail")}
-            hasFile={hasFile}
+            hasFile={hasThumbnail}
             onClear={() => resetField("thumbnail")}
+          />
+          <FileInput
+            title="SUPPORTING DOCUMENTS"
+            supportedFiles="Attach any relevant documentation for the admin review."
+            error={errors.files}
+            {...register("files")}
+            hasFile={hasDocuments}
+            onClear={() => resetField("files")}
           />
           {/* SUBMIT & CANCEL BUTTONS  */}
           <button
             type="submit"
-            className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mt-5.5 mb-2.5 bg-primary text-neutral rounded-xl p-4 active:bg-secondary-200"
+            className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mt-2.5 mb-2.5 bg-primary text-neutral rounded-xl p-4 active:bg-secondary-200"
           >
             <span className={"font-bold lg:text-lg"}>Submit for Approval</span>
           </button>

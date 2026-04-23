@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { useProjects } from "../contexts/ProjectsContext";
 
 const AdminDashboard = () => {
-  const data = useProjects();
+  const {projects} = useProjects();
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
       <Header title={"Admin Dashboard"} role={"admin"} />
@@ -51,7 +51,6 @@ const AdminDashboard = () => {
             <Link
               to="/admin/approvals"
               className="max-[360px]:text-sm text-base font-semibold tracking-widest text-tertiary"
-              onClick={console.log("333")}
             >
               VIEW ALL
             </Link>
@@ -60,20 +59,27 @@ const AdminDashboard = () => {
 
           {/* PROJECTS LIST MAX IS 6 */}
           <div className="flex flex-col gap-2 last:mb-36">
-            {data.map((p) => {
-              if (p.id <= 6) {
-                return (
-                  <ProjectMiniCard
-                    key={p.id}
-                    thumbnail={p.thumbnail}
-                    status={p.status}
-                    title={p.title}
-                    description={p.description}
-                    goal={p.goal}
-                    funded={p.funded}
-                  />
-                );
-              }
+            {projects.map((p) => {
+              const formattedGoal = new Intl.NumberFormat("en", {
+                style: "currency",
+                currency: "USD",
+                maximumFractionDigits: 0,
+              }).format(Number(p.goal));
+              const fundPercent =
+                (Number(p.currentRaised) / Number(p.goal)) * 100 || 0;
+              return (
+                <ProjectMiniCard
+                  key={p.id}
+                  projectId={p.id}
+                  title={p.title}
+                  description={p.description}
+                  status={p.status}
+                  thumbnail={p.thumbnailUrl}
+                  goal={formattedGoal}
+                  funded={fundPercent}
+                  role={"admin"}
+                />
+              );
             })}
           </div>
           {/* ===== PROJECTS LIST ===== */}

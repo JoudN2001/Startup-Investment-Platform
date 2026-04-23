@@ -31,7 +31,7 @@ export default function ProjectMiniCard({
         {/* PROGRESS BAR & FUND TARGET */}
         <div className="w-full bg-neutral rounded-full max-[360px]:h-1 h-1.5 max-[360px]:mb-3 mb-4 mt-0.5 ">
           <div
-            className="bg-linear-to-r from-tertiary-200 to-tertiary-600 max-[360px]:h-1 h-1.5 rounded-full"
+            className="bg-linear-to-r from-tertiary-200 to-tertiary-600 max-[360px]:h-1 h-1.5 rounded-full max-w-full"
             style={{ width: `${funded}%` }}
           ></div>
         </div>

@@ -7,7 +7,7 @@ import { forwardRef } from "react";
 const TextArea = forwardRef(
   (
     {
-      title = "descreption",
+      title = "description",
       placeholder = "Provide a detailed overview of the investment opportunity...",
       hint = "",
       error,
