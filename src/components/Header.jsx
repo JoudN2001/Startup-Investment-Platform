@@ -4,52 +4,13 @@ import { Bell } from "lucide-react";
 // PAGES LINKS
 import { Link, useLocation } from "react-router-dom";
 
+// NAV LINKS GROUP
+import { getNavLinks } from "../config/navLinks";
+
 export default function Header({ title, role }) {
-  let navLinks = [];
-  switch (role) {
-    case "startup":
-      navLinks = [
-        {
-          id: "dashboard",
-          label: "dashboard",
-          path: "/startup",
-        },
-        {
-          id: "projects",
-          label: "projects",
-          path: "/startup/projects",
-        },
-        {
-          id: "settings",
-          label: "settings",
-          path: "/startup/settings",
-        },
-      ];
-      break;
-    case "admin":
-      navLinks = [
-        {
-          id: "dashboard",
-          label: "overview",
-          path: "/admin",
-        },
-        {
-          id: "approvals",
-          label: "approvals",
-          path: "/admin/approvals",
-        },
-        {
-          id: "settings",
-          label: "settings",
-          path: "/admin/settings",
-        },
-      ];
-      break;
-    default:
-      navLinks = [];
-  }
   const location = useLocation();
   const currentPath = location.pathname;
+  const navLinks = getNavLinks(role)
 
   return (
     <header

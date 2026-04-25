@@ -3,15 +3,30 @@ import HighlightedCard from "../components/HighlightedCard";
 import MobileNavBar from "../components/MobileNavBar";
 import ProjectMiniCard from "../components/ProjectMiniCard";
 import ResponsiveContainer from "../components/ResponsiveContainer";
-import SummarCard from "../components/SummaryCard";
+import SummaryCard from "../components/SummaryCard";
 import DesktopAdminHeader from "../components/DesktopAdminHeader";
 import DesktopNavBar from "../components/DesktopNavBar";
 
+// REACT ROUTER
 import { Link } from "react-router-dom";
+
+// CONTEXTS
 import { useProjects } from "../contexts/ProjectsContext";
 
+// REACT
+import { useMemo } from "react";
+
 const AdminDashboard = () => {
-  const {projects} = useProjects();
+  const { projects } = useProjects();
+
+  const totalPending = useMemo(() => {
+    return projects.filter((p) => p.status === "pending").length;
+  }, [projects]);
+
+  const totalApproved = useMemo(() => {
+    return projects.filter((p) => p.status === "published").length;
+  }, [projects]);
+
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
       <Header title={"Admin Dashboard"} role={"admin"} />
@@ -38,8 +53,8 @@ const AdminDashboard = () => {
             trend="+14.2% from last month"
           />
           <div className={"grid grid-cols-2 gap-5"}>
-            <SummarCard title="total pending" value={28} />
-            <SummarCard title="approvaed" value={156} />
+            <SummaryCard title="total pending" value={totalPending} />
+            <SummaryCard title="approved" value={totalApproved} />
           </div>
           {/* ===== SUMMARY ===== */}
 

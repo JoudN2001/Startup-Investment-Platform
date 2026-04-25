@@ -13,7 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 // CONTEXTS
 import { useProjects } from "../contexts/ProjectsContext";
 
-// SHEMA VALIDATION LIBRARY
+// SCHEMA VALIDATION LIBRARY
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -24,8 +24,8 @@ import { useForm, useWatch } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 
 // VALIDATION DATA FIELD CHECK
-const createProjectFormSchema = z.object(
-  {
+const createProjectFormSchema = z
+  .object({
     title: z
       .string({
         required_error: "Project name is required!",
@@ -71,14 +71,15 @@ const createProjectFormSchema = z.object(
         "Max file size is 25MB.",
       )
       .optional(),
-  }).refine((data) => data.minmumInvestement < data.fundingGoal, {
+  })
+  .refine((data) => data.minmumInvestement < data.fundingGoal, {
     message: "Minimum investment must be strictly less than the funding goal.",
     path: ["minmumInvestement"],
   });
 
 export default function CreateProjectForm() {
   const navigate = useNavigate();
-  const { projects } = useProjects();
+  const { projects, setProjects } = useProjects();
   // USEFORM HOOK WITH SECHEMA VALIDATION
   const {
     register,
@@ -95,8 +96,19 @@ export default function CreateProjectForm() {
   const hasThumbnail = thumbnailFile && thumbnailFile.length > 0;
   const hasDocuments = documentsFile && documentsFile.length > 0;
 
+  // TRY CATCH LOCAL STORAGE
+  const saveProjectsToStorage = (updatedProjects) => {
+    try {
+      localStorage.setItem("projects", JSON.stringify(updatedProjects));
+      return true;
+    } catch (error) {
+      console.error("Failed to save data. Local storage might be full:", error);
+      alert("Your storage is full! Some changes might not be saved.");
+      return false;
+    }
+  };
 
-  // HANDEL SUBMIT FORM
+  // HANDLE SUBMIT FORM
   const onSubmit = (data) => {
     // TODO: Files and thumbnail must be as link or create backend
     const newProject = {
@@ -114,9 +126,12 @@ export default function CreateProjectForm() {
       adminFeedback: "",
       investors: [],
     };
-    console.log("Form data validated and ready to send!");
-    navigate("./submit");
-    localStorage.setItem("projects", JSON.stringify([...projects, newProject]));
+    const updatedProjects = [...projects, newProject];
+    const isSaved = saveProjectsToStorage(updatedProjects);
+    if (isSaved) {
+      setProjects(updatedProjects);
+      navigate("/startup/creation-form/submit");
+    }
   };
 
   // SHOW ERROR FORM

@@ -57,7 +57,7 @@ const AdminApprovals = () => {
     <div className={"bg-neutral-950 w-full min-h-dvh lg:pl-72"}>
       <Header title={"Admin Dashboard"} role={"admin"} />
       <DesktopAdminHeader />
-      <DesktopNavBar title="investment portal" role={"admin"} />
+      <DesktopNavBar title="investment portal" />
       {/* MAIN CONTENT */}
       <ResponsiveContainer>
         {/* SEARCH + FILTERATION  */}

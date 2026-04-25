@@ -8,15 +8,20 @@ import StartupSettings from "./pages/StartupSettings";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminApprovals from "./pages/AdminApprovals";
 import AdminSettings from "./pages/AdminSettings";
-import ProjectsDetailes from "./pages/ProjectsDetailes";
+import ProjectDetails from "./pages/ProjectDetails";
+import SignInPage from "./pages/SignInPage";
 
-// REACT ROUTERs
-import { Route, Routes, Link } from "react-router-dom";
+// REACT ROUTER
+import { Route, Routes } from "react-router-dom";
 
 // CONTEXTS
 import { ProjectsProvider } from "./contexts/ProjectsContext";
 
 function App() {
+  // TODO (Phase 3 - Backend Integration):
+  // Replace these public routes with <ProtectedRoute> wrappers.
+  // Current implementation relies on UI-level role props (prototype only).
+  // Needs real validation via Token/Session state once the Auth layer is built.
   return (
     <ProjectsProvider>
       <Routes>
@@ -29,7 +34,10 @@ function App() {
           </Route>
           <Route path="projects">
             <Route index element={<StartupProjects />} />
-            <Route path="project-details/:projectId" element={<ProjectsDetailes role="startup" />} />
+            <Route
+              path="project-details/:projectId"
+              element={<ProjectDetails role="startup" />}
+            />
           </Route>
           <Route path="settings" element={<StartupSettings />} />
         </Route>
@@ -42,23 +50,19 @@ function App() {
             <Route index element={<AdminApprovals />} />
             <Route
               path="project-details/:projectId"
-              element={<ProjectsDetailes role="admin" />}
+              element={<ProjectDetails role="admin" />}
             />
           </Route>
           <Route path="settings" element={<AdminSettings />} />
         </Route>
         {/* ===== ADMIN PAGES ===== */}
 
-        <Route
-          path="/"
-          element={
-            <div className="flex flex-col justify-center items-center text-3xl gap-10 font-bold h-lvh">
-              <Link to="/admin">Admin</Link>
-              <Link to="/startup">Startup</Link>
-            </div>
-          }
-        />
-        <Route path="*" element={<NotFound404 />} />
+        {/* Admin UserName = "admin"
+        Admin Password = "1234"
+        Startup UserName = "startup"
+        Startup Password = "1234" */}
+        <Route path="/" element={<SignInPage />} />
+        <Route path="*" element={<NotFound404 role="startup" />} />
       </Routes>
     </ProjectsProvider>
   );

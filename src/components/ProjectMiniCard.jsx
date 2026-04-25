@@ -1,20 +1,22 @@
 export default function ProjectMiniCard({
-  thumbnail = "https://hips.hearstapps.com/hmg-prod/images/edc100123egan-002-6500742f5feb7.jpg?crop=0.9136xw:1xh;center,top&resize=1200:*",
-  status = "published",
-  title = "Architecture Office",
-  goal = "$1,200,000",
-  funded = 95,
+  thumbnail,
+  status,
+  title,
+  goal,
+  funded,
 }) {
   return (
     <div className="flex bg-neutral max-[360px]:rounded-xl rounded-2xl p-3 max-[360px]:mt-2 mt-3 md:mt-0 shadow-xs">
       {/* IMAGE */}
-      <div className="max-[360px]:hidden shrink-0 w-20 h-20 p-3 pl-1">
-        <img
-          className="w-full h-full object-cover rounded-lg"
-          src={thumbnail}
-          alt="Project Thumbnail"
-        />
-      </div>
+      {thumbnail && (
+        <div className="max-[360px]:hidden shrink-0 w-20 h-20 p-3 pl-1">
+          <img
+            className="w-full h-full object-cover rounded-lg"
+            src={thumbnail}
+            alt="Project Thumbnail"
+          />
+        </div>
+      )}
       {/* ===== IMAGE ===== */}
 
       <div className="flex-1 min-w-0 mr-4">

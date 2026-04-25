@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
+// NAV LINKS GROUP
+import { getNavLinks } from "../config/navLinks";
 
-export default function NotFound404() {
+export default function NotFound404({ role }) {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const navLinks = getNavLinks(role);
 
   useEffect(() => {
     gsap.set("svg", { visibility: "visible" });
@@ -101,26 +104,26 @@ export default function NotFound404() {
           className="relative w-8 h-6 flex flex-col justify-between bg-transparent border-none cursor-pointer focus:outline-none"
         >
           <span
-            className={`block h-[3px] w-full bg-[#0e0620] transition-all duration-200 ease-in ${isNavOpen ? "rotate-45 translate-y-[10px]" : ""}`}
+            className={`block h-0.75 w-full bg-[#0e0620] transition-all duration-200 ease-in ${isNavOpen ? "rotate-45 translate-y-2.5" : ""}`}
           ></span>
           <span
-            className={`block h-[3px] w-full bg-[#0e0620] transition-all duration-200 ease-in ${isNavOpen ? "w-0 opacity-0" : ""}`}
+            className={`block h-0.75 w-full bg-[#0e0620] transition-all duration-200 ease-in ${isNavOpen ? "w-0 opacity-0" : ""}`}
           ></span>
           <span
-            className={`block h-[3px] w-full bg-[#0e0620] transition-all duration-200 ease-in ${isNavOpen ? "-rotate-45 -translate-y-[11px]" : ""}`}
+            className={`block h-0.75 w-full bg-[#0e0620] transition-all duration-200 ease-in ${isNavOpen ? "-rotate-45 -translate-y-2.75" : ""}`}
           ></span>
         </button>
       </div>
       {/* ===== SIDEBAR NAVIGATION ===== */}
       <nav
-        className={`fixed top-0 left-0 h-full w-[300px] bg-neutral-900 border-r border-neutral-800 text-neutral pt-24 z-40 transition-transform duration-500 ease-[cubic-bezier(.52,.01,.8,1)] ${
+        className={`fixed top-0 left-0 h-full w-75 bg-neutral-900 border-r border-neutral-800 text-neutral pt-24 z-40 transition-transform duration-500 ease-[cubic-bezier(.52,.01,.8,1)] ${
           isNavOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <ul className="list-none px-10 space-y-4">
-          {["Dashboard", "Projects", "Settings"].map((item, index) => (
+        <ul className="list-none px-10 space-y-12">
+          {navLinks.map((item, index) => (
             <li
-              key={item}
+              key={item.id}
               className={`transition-all duration-300 ease-[cubic-bezier(0.44,0.09,0.46,0.84)] ${
                 isNavOpen
                   ? "translate-x-0 opacity-100"
@@ -131,10 +134,10 @@ export default function NotFound404() {
               }}
             >
               <Link
-                to={item === "Dashboard" ? "/" : `/${item.toLowerCase()}`}
+                to={item.path}
                 className="block text-3xl font-bold text-primary hover:text-primary-100 transition-colors duration-300"
               >
-                {item}
+                {item.label}
               </Link>
             </li>
           ))}
@@ -156,7 +159,7 @@ export default function NotFound404() {
             dashboard.
           </p>
 
-          <Link to="/">
+          <Link to={role === "admin" ? "/admin" : "/startup"}>
             <button className="group relative z-10 overflow-hidden border-2 border-primary text-primary font-bold text-lg tracking-[2px] px-12 py-3 rounded-full transition-colors duration-200 hover:text-neutral mt-4 cursor-pointer">
               <span className="absolute inset-0 w-0 bg-primary transition-all duration-300 ease-out group-hover:w-full -z-10"></span>
               RETURN HOME

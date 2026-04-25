@@ -1,4 +1,4 @@
-export default function SummarCard({ title = "title", value = 0 }) {
+export default function SummaryCard({ title = "title", value = 0 }) {
   // TODO : DYNAMIC NUMBERS AND COLORS FOR PERSENTAGE
   return (
     <div className={"bg-neutral-900/50 rounded-2xl py-2 sm:py-3 px-5 sm:px-7 mt-6 lg:mt-0"}>

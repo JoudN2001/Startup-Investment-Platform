@@ -1,63 +1,13 @@
-// ICONS
-import { LayoutDashboard, Settings, FolderTree, ListTodo } from "lucide-react";
-
 // REACT ROUTER
 import { Link, useLocation } from "react-router-dom";
+
+// NAV LINKS GROUP
+import { getNavLinks } from "../config/navLinks";
 
 export default function MobileNavBar({ role }) {
   const location = useLocation();
   const currentPath = location.pathname;
-
-  // NAV LINKS GROUP
-  let navLinks = [];
-  switch (role) {
-    case "startup":
-      navLinks = [
-        {
-          id: "dashboard",
-          label: "dashboard",
-          icon: LayoutDashboard,
-          path: "/startup",
-        },
-        {
-          id: "projects",
-          label: "projects",
-          icon: FolderTree,
-          path: "/startup/projects",
-        },
-        {
-          id: "settings",
-          label: "settings",
-          icon: Settings,
-          path: "/startup/settings",
-        },
-      ];
-      break;
-    case "admin":
-      navLinks = [
-        {
-          id: "dashboard",
-          label: "overview",
-          icon: LayoutDashboard,
-          path: "/admin",
-        },
-        {
-          id: "approvals",
-          label: "approvals",
-          icon: ListTodo,
-          path: "/admin/approvals",
-        },
-        {
-          id: "settings",
-          label: "settings",
-          icon: Settings,
-          path: "/admin/settings",
-        },
-      ];
-      break;
-    default:
-      navLinks = [];
-  }
+  const navLinks = getNavLinks(role)
 
   return (
     // NAVIGATION BAR

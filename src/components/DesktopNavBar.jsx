@@ -4,30 +4,14 @@ import { LayoutDashboard, Settings, ListTodo } from "lucide-react";
 // REACT ROUTER
 import { Link, useLocation } from "react-router-dom";
 
-const navLinks = [
-  {
-    id: "dashboard",
-    label: "overview",
-    icon: LayoutDashboard,
-    path: "/admin",
-  },
-  {
-    id: "approvals",
-    label: "approvals",
-    icon: ListTodo,
-    path: "/admin/approvals",
-  },
-  {
-    id: "settings",
-    label: "settings",
-    icon: Settings,
-    path: "/admin/settings",
-  },
-];
+// NAV LINKS
+import { getNavLinks } from "../config/navLinks";
 
 const DesktopNavBar = ({ title }) => {
+  const role = "admin"
   const location = useLocation();
   const currentPath = location.pathname;
+  const navLinks = getNavLinks(role);
   return (
     <nav className="hidden lg:flex flex-col fixed left-7 top-24 h-dvh w-64 z-50">
       {/* DESKTOP NAVBAR TITLE */}
