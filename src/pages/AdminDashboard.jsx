@@ -19,6 +19,7 @@ import { useMemo } from "react";
 const AdminDashboard = () => {
   const { projects } = useProjects();
 
+  // DYNAMIC DATA IN CARDS
   const totalPending = useMemo(() => {
     return projects.filter((p) => p.status === "pending").length;
   }, [projects]);
@@ -27,7 +28,6 @@ const AdminDashboard = () => {
     return projects.filter((p) => p.status === "published").length;
   }, [projects]);
 
-  // ((current month goal - last month goal) / last month goal) * 100
   const fundsTrend = useMemo(() => {
     const now = new Date();
     const currentMonth = now.getMonth();
@@ -64,15 +64,31 @@ const AdminDashboard = () => {
   }, [projects]);
 
   const totalFundsRequested = useMemo(() => {
-    return projects.reduce((total, projects) => total + projects.goal, 0);
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    let monthTotal = 0;
+
+    projects.forEach((p) => {
+      if (!p.createdAt) return;
+      const projectDate = new Date(p.createdAt);
+      const projectMonth = projectDate.getMonth();
+      const projectYear = projectDate.getFullYear();
+      if (projectMonth === currentMonth && projectYear === currentYear)
+        monthTotal += p.goal;
+    });
+
+    return Number(monthTotal);
   }, [projects]);
 
-  const formattedFundsRequested = new Intl.NumberFormat("en", {
-    style: "currency",
-    currency: "USD",
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(totalFundsRequested);
+  const formattedFundsRequested = useMemo(() => {
+    return new Intl.NumberFormat("en", {
+      style: "currency",
+      currency: "USD",
+      notation: "compact",
+      maximumFractionDigits: 1,
+    }).format(totalFundsRequested);
+  }, [totalFundsRequested]);
 
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
@@ -95,7 +111,7 @@ const AdminDashboard = () => {
 
           {/* SUMMARY */}
           <HighlightedCard
-            title="total funds requested"
+            title="Monthly Funds Requested"
             value={formattedFundsRequested}
             trend={fundsTrend}
           />

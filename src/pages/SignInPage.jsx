@@ -30,12 +30,11 @@ const SignInPage = () => {
 
   // HANDLE SIGN IN
   const onSignIn = (data) => {
-
-    // DEMO USERS 
+    // DEMO USERS
     const adminUser = import.meta.env.VITE_DEMO_ADMIN_USER;
     const adminPass = import.meta.env.VITE_DEMO_ADMIN_PASS;
-    const startupUser = import.meta.env.VITE_DEMO_STSRTUP_USER;
-    const startupPass = import.meta.env.VITE_DEMO_STSRTUP_PASS;
+    const startupUser = import.meta.env.VITE_DEMO_STARTUP_USER;
+    const startupPass = import.meta.env.VITE_DEMO_STARTUP_PASS;
 
     if (data.userName === adminUser && data.password === adminPass) {
       navigate("/admin");
