@@ -1,12 +1,20 @@
-import { useState, useEffect } from "react";
+// REACT 
+import { useState, useEffect, useMemo } from "react";
+
+// REACT ROUTER
 import { Link } from "react-router-dom";
-import gsap from "gsap";
+
 // NAV LINKS GROUP
 import { getNavLinks } from "../config/navLinks";
 
+// ANIMATION LIBRARY
+import gsap from "gsap";
+
 export default function NotFound404({ role }) {
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const navLinks = getNavLinks(role);
+  const navLinks = useMemo(() => {
+    return getNavLinks(role);
+  }, [role]);
 
   useEffect(() => {
     gsap.set("svg", { visibility: "visible" });

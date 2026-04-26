@@ -1,4 +1,3 @@
-
 export const dummyProjects = [
   {
     id: "proj-001",

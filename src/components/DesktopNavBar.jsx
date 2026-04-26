@@ -4,14 +4,18 @@ import { LayoutDashboard, Settings, ListTodo } from "lucide-react";
 // REACT ROUTER
 import { Link, useLocation } from "react-router-dom";
 
+// REACT
+import { useMemo } from "react";
+
 // NAV LINKS
 import { getNavLinks } from "../config/navLinks";
 
-const DesktopNavBar = ({ title }) => {
-  const role = "admin"
+const DesktopNavBar = ({ title, role }) => {
   const location = useLocation();
   const currentPath = location.pathname;
-  const navLinks = getNavLinks(role);
+  const navLinks = useMemo(() => {
+    return getNavLinks(role);
+  }, [role]);
   return (
     <nav className="hidden lg:flex flex-col fixed left-7 top-24 h-dvh w-64 z-50">
       {/* DESKTOP NAVBAR TITLE */}

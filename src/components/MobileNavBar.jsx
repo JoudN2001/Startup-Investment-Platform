@@ -1,13 +1,18 @@
 // REACT ROUTER
 import { Link, useLocation } from "react-router-dom";
 
+// REACT
+import { useMemo } from "react";
+
 // NAV LINKS GROUP
 import { getNavLinks } from "../config/navLinks";
 
 export default function MobileNavBar({ role }) {
   const location = useLocation();
   const currentPath = location.pathname;
-  const navLinks = getNavLinks(role)
+  const navLinks = useMemo(() => {
+    return getNavLinks(role);
+  }, [role]);
 
   return (
     // NAVIGATION BAR

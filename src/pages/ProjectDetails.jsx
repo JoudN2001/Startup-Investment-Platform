@@ -22,6 +22,9 @@ import { TextAlignStart } from "lucide-react";
 // REACT
 import { useState } from "react";
 
+// CHECK ERROR ON LOCAL STORAGE
+import { saveProjectsToStorage } from "../utils/storage";
+
 const ProjectDetails = ({ role }) => {
   const { projectId } = useParams();
   const { projects, setProjects } = useProjects();
@@ -60,18 +63,6 @@ const ProjectDetails = ({ role }) => {
       : "Not updated yet";
   }
 
-  // TRY CATCH LOCAL STORAGE
-  const saveProjectsToStorage = (updatedProjects) => {
-    try {
-      localStorage.setItem("projects", JSON.stringify(updatedProjects));
-      return true;
-    } catch (error) {
-      console.error("Failed to save data. Local storage might be full:", error);
-      alert("Your storage is full! Some changes might not be saved.");
-      return false;
-    }
-  };
-
   // HANDLE FORM EVENTS
   const handleDecision = (newStatus) => {
     const updatedProjects = projects.map((p) => {
@@ -95,7 +86,9 @@ const ProjectDetails = ({ role }) => {
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
       <Header title={"Project Details"} role={role} />
       {role === "admin" && <DesktopAdminHeader />}
-      {role === "admin" && <DesktopNavBar title="investment portal" />}
+      {role === "admin" && (
+        <DesktopNavBar title="investment portal" role={role} />
+      )}
       <ResponsiveContainer>
         {/* PROJECTS DETAILS */}
         <main className={`${role === "admin" ? "lg:pl-72" : ""}`}>
@@ -204,7 +197,7 @@ const ProjectDetails = ({ role }) => {
         </main>
         {/* ===== PROJECTS DETAILS ===== */}
       </ResponsiveContainer>
-      <MobileNavBar role={"admin"} />
+      <MobileNavBar role={role} />
     </div>
   ) : (
     <NotFound404 role={role} />

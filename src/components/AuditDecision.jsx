@@ -48,7 +48,7 @@ const AuditDecision = ({
               <button
                 type="button"
                 onClick={() => handleDecision("pending")}
-                className="flex flex-1 items-center justify-center gap-2 text-error font-semibold bg-neutral border-amber-500 border-2 py-2 px-2 rounded-lg"
+                className="flex flex-1 items-center justify-center gap-2 text-error font-semibold bg-neutral border-warning border-2 py-2 px-2 rounded-lg"
               >
                 <SquarePen />
                 Revision

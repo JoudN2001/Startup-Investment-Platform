@@ -30,9 +30,16 @@ const SignInPage = () => {
 
   // HANDLE SIGN IN
   const onSignIn = (data) => {
-    if (data.userName === "admin" && data.password === "1234") {
+
+    // DEMO USERS 
+    const adminUser = import.meta.env.VITE_DEMO_ADMIN_USER;
+    const adminPass = import.meta.env.VITE_DEMO_ADMIN_PASS;
+    const startupUser = import.meta.env.VITE_DEMO_STSRTUP_USER;
+    const startupPass = import.meta.env.VITE_DEMO_STSRTUP_PASS;
+
+    if (data.userName === adminUser && data.password === adminPass) {
       navigate("/admin");
-    } else if (data.userName === "startup" && data.password === "1234") {
+    } else if (data.userName === startupUser && data.password === startupPass) {
       navigate("/startup");
     } else {
       setError("root", {
@@ -42,22 +49,10 @@ const SignInPage = () => {
     }
   };
 
-  {
-    errors.root && (
-      <div className="bg-error-bg border border-error text-error text-sm p-3 rounded-lg text-center font-medium">
-        {errors.root.message}
-      </div>
-    );
-  }
-  // SHOW ERROR SIGN IN
-  const onError = (errors) => {
-    console.error(errors);
-  };
-
   return (
     <div className="min-h-dvh flex items-center justify-center bg-neutral-950 p-4 font-sans text-neutral-100">
       <form
-        onSubmit={handleSubmit(onSignIn, onError)}
+        onSubmit={handleSubmit(onSignIn)}
         className="flex flex-col gap-4 bg-white p-6 sm:p-8 w-full max-w-112.5 rounded-2xl shadow-lg"
       >
         {/* USER NAME FILED */}

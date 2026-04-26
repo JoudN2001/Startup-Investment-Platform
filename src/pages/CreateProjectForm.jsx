@@ -13,6 +13,9 @@ import { Link, useNavigate } from "react-router-dom";
 // CONTEXTS
 import { useProjects } from "../contexts/ProjectsContext";
 
+// CHECK ERROR ON LOCAL STORAGE
+import { saveProjectsToStorage } from "../utils/storage";
+
 // SCHEMA VALIDATION LIBRARY
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -96,18 +99,6 @@ export default function CreateProjectForm() {
   const hasThumbnail = thumbnailFile && thumbnailFile.length > 0;
   const hasDocuments = documentsFile && documentsFile.length > 0;
 
-  // TRY CATCH LOCAL STORAGE
-  const saveProjectsToStorage = (updatedProjects) => {
-    try {
-      localStorage.setItem("projects", JSON.stringify(updatedProjects));
-      return true;
-    } catch (error) {
-      console.error("Failed to save data. Local storage might be full:", error);
-      alert("Your storage is full! Some changes might not be saved.");
-      return false;
-    }
-  };
-
   // HANDLE SUBMIT FORM
   const onSubmit = (data) => {
     // TODO: Files and thumbnail must be as link or create backend
@@ -132,11 +123,6 @@ export default function CreateProjectForm() {
       setProjects(updatedProjects);
       navigate("/startup/creation-form/submit");
     }
-  };
-
-  // SHOW ERROR FORM
-  const onError = (errors) => {
-    console.error(errors);
   };
 
   return (
@@ -191,7 +177,7 @@ export default function CreateProjectForm() {
         {/* FORM */}
         <form
           noValidate
-          onSubmit={handleSubmit(onSubmit, onError)}
+          onSubmit={handleSubmit(onSubmit)}
           className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full"
         >
           <InputFiled

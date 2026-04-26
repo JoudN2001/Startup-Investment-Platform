@@ -27,11 +27,58 @@ const AdminDashboard = () => {
     return projects.filter((p) => p.status === "published").length;
   }, [projects]);
 
+  // ((current month goal - last month goal) / last month goal) * 100
+  const fundsTrend = useMemo(() => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+    const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+    let currentMonthTotal = 0;
+    let lastMonthTotal = 0;
+
+    projects.forEach((p) => {
+      if (!p.createdAt) return;
+      const projectDate = new Date(p.createdAt);
+      const projectMonth = projectDate.getMonth();
+      const projectYear = projectDate.getFullYear();
+
+      if (projectMonth === currentMonth && projectYear === currentYear)
+        currentMonthTotal += p.goal;
+      else if (projectMonth === lastMonth && projectYear === lastMonthYear)
+        lastMonthTotal += p.goal;
+    });
+
+    if (lastMonthTotal === 0)
+      return currentMonthTotal > 0
+        ? "+100.0% from last month"
+        : "0.0% from last month";
+
+    const percentageChange =
+      ((currentMonthTotal - lastMonthTotal) / lastMonthTotal) * 100;
+
+    const sign = percentageChange > 0 ? "+" : "";
+    return `${sign}${percentageChange.toFixed(1)}% from last month`;
+  }, [projects]);
+
+  const totalFundsRequested = useMemo(() => {
+    return projects.reduce((total, projects) => total + projects.goal, 0);
+  }, [projects]);
+
+  const formattedFundsRequested = new Intl.NumberFormat("en", {
+    style: "currency",
+    currency: "USD",
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(totalFundsRequested);
+
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
       <Header title={"Admin Dashboard"} role={"admin"} />
       <DesktopAdminHeader />
-      <DesktopNavBar title="investment portal" />
+      <DesktopNavBar title="investment portal" role="admin" />
       <ResponsiveContainer>
         <main className="lg:pl-72">
           {/* OVERVIEW */}
@@ -49,8 +96,8 @@ const AdminDashboard = () => {
           {/* SUMMARY */}
           <HighlightedCard
             title="total funds requested"
-            value="$12.4M"
-            trend="+14.2% from last month"
+            value={formattedFundsRequested}
+            trend={fundsTrend}
           />
           <div className={"grid grid-cols-2 gap-5"}>
             <SummaryCard title="total pending" value={totalPending} />

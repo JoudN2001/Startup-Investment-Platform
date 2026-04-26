@@ -10,7 +10,7 @@ const AdminSetting = () => {
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
       <Header title={"Admin Dashboard"} role={"admin"} />
       <DesktopAdminHeader />
-      <DesktopNavBar title="investment portal"/>
+      <DesktopNavBar title="investment portal" role="admin"/>
       {/* MAIN CONTENT */}
       <ResponsiveContainer></ResponsiveContainer>
       {/* ====== MAIN CONTENT ===== */}

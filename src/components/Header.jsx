@@ -1,8 +1,11 @@
 // ICONS
 import { Bell } from "lucide-react";
 
-// PAGES LINKS
+// REACT ROUTER
 import { Link, useLocation } from "react-router-dom";
+
+// REACT
+import { useMemo } from "react";
 
 // NAV LINKS GROUP
 import { getNavLinks } from "../config/navLinks";
@@ -10,8 +13,9 @@ import { getNavLinks } from "../config/navLinks";
 export default function Header({ title, role }) {
   const location = useLocation();
   const currentPath = location.pathname;
-  const navLinks = getNavLinks(role)
-
+  const navLinks = useMemo(() => {
+    return getNavLinks(role);
+  }, [role]);
   return (
     <header
       className={`flex ${role === "admin" ? "lg:hidden" : "lg:"} fixed w-full justify-between items-center py-3 px-4 lg:py-6 lg:px-8 bg-neutral shadow-[0_4px_10px_rgba(0,0,0,0.05)] z-50`}

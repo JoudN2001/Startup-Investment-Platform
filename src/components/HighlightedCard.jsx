@@ -1,7 +1,7 @@
 // ICON
 import { ChartNoAxesCombined, Landmark } from "lucide-react";
 
-const HighlightedCard = ({ title = "title", value = 0, trend }) => {
+const HighlightedCard = ({ title = "", value, trend }) => {
   return (
     <div className="relative overflow-hidden flex flex-col bg-primary rounded-2xl sm:rounded-5xl py-4 sm:py-5 px-5 sm:px-9 mt-6 lg:my-2">
       {/* CARD INFO */}

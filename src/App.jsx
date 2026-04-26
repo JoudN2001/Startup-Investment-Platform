@@ -57,10 +57,6 @@ function App() {
         </Route>
         {/* ===== ADMIN PAGES ===== */}
 
-        {/* Admin UserName = "admin"
-        Admin Password = "1234"
-        Startup UserName = "startup"
-        Startup Password = "1234" */}
         <Route path="/" element={<SignInPage />} />
         <Route path="*" element={<NotFound404 role="startup" />} />
       </Routes>
