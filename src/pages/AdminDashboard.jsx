@@ -28,7 +28,7 @@ const AdminDashboard = () => {
     return projects.filter((p) => p.status === "published").length;
   }, [projects]);
 
-  const fundsTrend = useMemo(() => {
+  const { monthlyFundsRequested, fundsTrend } = useMemo(() => {
     const now = new Date();
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
@@ -39,46 +39,39 @@ const AdminDashboard = () => {
     let currentMonthTotal = 0;
     let lastMonthTotal = 0;
 
+    // Loop through projects exactly ONCE
     projects.forEach((p) => {
       if (!p.createdAt) return;
-      const projectDate = new Date(p.createdAt);
-      const projectMonth = projectDate.getMonth();
-      const projectYear = projectDate.getFullYear();
+      const pDate = new Date(p.createdAt);
+      const pMonth = pDate.getMonth();
+      const pYear = pDate.getFullYear();
 
-      if (projectMonth === currentMonth && projectYear === currentYear)
+      if (pMonth === currentMonth && pYear === currentYear) {
         currentMonthTotal += p.goal;
-      else if (projectMonth === lastMonth && projectYear === lastMonthYear)
+      } else if (pMonth === lastMonth && pYear === lastMonthYear) {
         lastMonthTotal += p.goal;
+      }
     });
 
-    if (lastMonthTotal === 0)
-      return currentMonthTotal > 0
-        ? "+100.0% from last month"
-        : "0.0% from last month";
+    // Calculate Trend
+    let trendString = "0.0% from last month";
+    if (lastMonthTotal === 0) {
+      trendString =
+        currentMonthTotal > 0
+          ? "+100.0% from last month"
+          : "0.0% from last month";
+    } else {
+      const percentageChange =
+        ((currentMonthTotal - lastMonthTotal) / lastMonthTotal) * 100;
+      const sign = percentageChange >= 0 ? "+" : "";
+      trendString = `${sign}${percentageChange.toFixed(1)}% from last month`;
+    }
 
-    const percentageChange =
-      ((currentMonthTotal - lastMonthTotal) / lastMonthTotal) * 100;
-
-    const sign = percentageChange > 0 ? "+" : "";
-    return `${sign}${percentageChange.toFixed(1)}% from last month`;
-  }, [projects]);
-
-  const totalFundsRequested = useMemo(() => {
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-    let monthTotal = 0;
-
-    projects.forEach((p) => {
-      if (!p.createdAt) return;
-      const projectDate = new Date(p.createdAt);
-      const projectMonth = projectDate.getMonth();
-      const projectYear = projectDate.getFullYear();
-      if (projectMonth === currentMonth && projectYear === currentYear)
-        monthTotal += p.goal;
-    });
-
-    return Number(monthTotal);
+    // Return both values with their correct names
+    return {
+      monthlyFundsRequested: currentMonthTotal,
+      fundsTrend: trendString,
+    };
   }, [projects]);
 
   const formattedFundsRequested = useMemo(() => {
@@ -87,8 +80,8 @@ const AdminDashboard = () => {
       currency: "USD",
       notation: "compact",
       maximumFractionDigits: 1,
-    }).format(totalFundsRequested);
-  }, [totalFundsRequested]);
+    }).format(monthlyFundsRequested);
+  }, [monthlyFundsRequested]);
 
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
