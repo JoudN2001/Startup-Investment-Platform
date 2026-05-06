@@ -14,16 +14,17 @@ import { Link } from "react-router-dom";
 
 // HOOKS
 import { useProjects } from "../contexts/ProjectsContext";
+import { useMemo } from "react";
 
 export default function StartupDashboard() {
-  const {projects} = useProjects();
+  const { projects } = useProjects();
   const projectsCards = projects.map((p) => {
     const formattedGoal = new Intl.NumberFormat("en", {
       style: "currency",
       currency: "USD",
       maximumFractionDigits: 0,
     }).format(Number(p.goal));
-    const fundPercent = (Number(p.currentRaised) / Number(p.goal) * 100) || 0;
+    const fundPercent = (Number(p.currentRaised) / Number(p.goal)) * 100 || 0;
     return (
       <ProjectCard
         key={p.id}
@@ -38,6 +39,67 @@ export default function StartupDashboard() {
       />
     );
   });
+
+  // DYNAMIC DATA
+  const totalApproved = useMemo(() => {
+    return projects.filter((p) => p.status === "published").length;
+  }, [projects]);
+
+  const { monthlyFundsRequested, fundsTrend } = useMemo(() => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+    const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+    let currentMonthTotal = 0;
+    let lastMonthTotal = 0;
+
+    // Loop through projects exactly ONCE
+    projects.forEach((p) => {
+      if (!p.createdAt) return;
+      const pDate = new Date(p.createdAt);
+      const pMonth = pDate.getMonth();
+      const pYear = pDate.getFullYear();
+
+      if (pMonth === currentMonth && pYear === currentYear) {
+        currentMonthTotal += p.goal;
+      } else if (pMonth === lastMonth && pYear === lastMonthYear) {
+        lastMonthTotal += p.goal;
+      }
+    });
+
+    // Calculate Trend
+    let trendString = "0.0% from last month";
+    if (lastMonthTotal === 0) {
+      trendString =
+        currentMonthTotal > 0
+          ? "+100.0% from last month"
+          : "0.0% from last month";
+    } else {
+      const percentageChange =
+        ((currentMonthTotal - lastMonthTotal) / lastMonthTotal) * 100;
+      const sign = percentageChange >= 0 ? "+" : "";
+      trendString = `${sign}${percentageChange.toFixed(1)}%`;
+    }
+
+    // Return both values with their correct names
+    return {
+      monthlyFundsRequested: currentMonthTotal,
+      fundsTrend: trendString,
+    };
+  }, [projects]);
+
+  const formattedFundsRequested = useMemo(() => {
+    return new Intl.NumberFormat("en", {
+      style: "currency",
+      currency: "USD",
+      notation: "compact",
+      maximumFractionDigits: 1,
+    }).format(monthlyFundsRequested);
+  }, [monthlyFundsRequested]);
+
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
       <Header title={"Startup Dashboard"} role={"startup"} />
@@ -84,9 +146,12 @@ export default function StartupDashboard() {
         </div>
         {/* SUMMARY CARDS */}
         <div className={"flex flex-col md:grid md:grid-cols-2 md:gap-5"}>
-          <SummaryCard title={"active deals"} value={"12"} />
-          <SummaryCard title={"total funding"} value={"$4.2M"} />
-          <SummaryCard title={"avg. growth"} value={"+24.8%"} />
+          <SummaryCard title={"active deals"} value={totalApproved} />
+          <SummaryCard
+            title={"MONTHLY FUNDS REQUESTED"}
+            value={formattedFundsRequested}
+          />
+          <SummaryCard title={"avg. growth"} value={fundsTrend} />
         </div>
         {/* ====== SUMMARY CARDAS ===== */}
 
