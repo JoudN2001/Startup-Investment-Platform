@@ -2,15 +2,21 @@
 import MobileNavBar from "../components/MobileNavBar";
 import Header from "../components/Header";
 import ResponsiveContainer from "../components/ResponsiveContainer";
+import DesktopAdminHeader from "../components/DesktopAdminHeader";
+import DesktopNavBar from "../components/DesktopNavBar";
 
-export default function StartupSetting() {
+const AdminSetting = () => {
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header title={"Startup Dashboard"} role={"startup"}/>
+      <Header title={"Admin Dashboard"} role={"admin"} />
+      <DesktopAdminHeader />
+      <DesktopNavBar title="investment portal" role="admin"/>
       {/* MAIN CONTENT */}
       <ResponsiveContainer></ResponsiveContainer>
       {/* ====== MAIN CONTENT ===== */}
-      <MobileNavBar role="startup"/>
+      <MobileNavBar role="admin" />
     </div>
   );
-}
+};
+
+export default AdminSetting;

@@ -1,16 +1,25 @@
-// HOOKS
-import { useState } from "react";
-
 // ICONS
 import { Bell } from "lucide-react";
 
-// PAGES LINKS
-import { Link } from "react-router-dom";
+// REACT ROUTER
+import { Link, useLocation } from "react-router-dom";
 
-export default function Header({page = "dashboard"}) {
-  const [selectedNav, setSelectedNav] = useState(page);
+// REACT
+import { useMemo } from "react";
+
+// NAV LINKS GROUP
+import { getNavLinks } from "../config/navLinks";
+
+export default function Header({ title, role }) {
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const navLinks = useMemo(() => {
+    return getNavLinks(role);
+  }, [role]);
   return (
-    <header className="flex fixed w-full justify-between items-center py-3 px-4 lg:py-6 lg:px-8 bg-neutral shadow-[0_4px_10px_rgba(0,0,0,0.05)] z-50">
+    <header
+      className={`flex ${role === "admin" ? "lg:hidden" : "lg:"} fixed w-full justify-between items-center py-3 px-4 lg:py-6 lg:px-8 bg-neutral shadow-[0_4px_10px_rgba(0,0,0,0.05)] z-50`}
+    >
       {/* PROFILE & TITLE */}
       <div className={" flex items-center space-x-3"}>
         <div
@@ -22,47 +31,26 @@ export default function Header({page = "dashboard"}) {
             N
           </span>
         </div>
-        <span className={"text-xl xl:text-2xl font-bold"}>
-          Startup Dashboard
-        </span>
+        <span className={"text-xl xl:text-2xl font-bold"}>{title}</span>
       </div>
       {/* ===== PROFILE & TITLE ===== */}
       {/* NAVIGATION DESCKTOP */}
-      <nav
-        className={
-          "hidden md:flex space-x-4 md:space-x-6 lg:space-x-8 xl:space-x-12 text-neutral-500 font-semibold"
-        }
-      >
-        <Link to={"/"}>
-          <h1
-            onClick={() => {
-              setSelectedNav("dashboard");
-            }}
-            className={`hover:text-neutral-300 ${selectedNav === "dashboard" ? "text-neutral-100" : ""} select-none lg:text-lg transition-all duration-300`}
-          >
-            DASHBOARD
-          </h1>
-        </Link>
-        <Link to={"/projects"}>
-          <h1
-            onClick={() => {
-              setSelectedNav("projects");
-            }}
-            className={`hover:text-neutral-300 ${selectedNav === "projects" ? "text-neutral-100" : ""} select-none lg:text-lg transition-all duration-300`}
-          >
-            PROJECTS
-          </h1>
-        </Link>
-        <Link to={"/settings"}>
-          <h1
-            onClick={() => {
-              setSelectedNav("settings");
-            }}
-            className={`hover:text-neutral-300 ${selectedNav === "settings" ? "text-neutral-100" : ""} select-none lg:text-lg transition-all duration-300`}
-          >
-            SETTINGS
-          </h1>
-        </Link>
+      <nav className="hidden md:flex space-x-4 md:space-x-6 lg:space-x-8 xl:space-x-12 text-neutral-500 font-semibold">
+        {navLinks.map((link) => {
+          let isRoot = link.path === "/admin" || link.path === "/startup";
+          let isActive = isRoot
+            ? currentPath === link.path
+            : currentPath.startsWith(link.path);
+          return (
+            <Link to={link.path} key={link.id}>
+              <h1
+                className={`hover:text-neutral-300 ${isActive ? "text-neutral-100" : ""} select-none lg:text-lg transition-all duration-300`}
+              >
+                {link.label.toUpperCase()}
+              </h1>
+            </Link>
+          );
+        })}
       </nav>
       {/* ===== NAVIGATION DESCKTOP ===== */}
       <Bell className={"md:hidden"} />

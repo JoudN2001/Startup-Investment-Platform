@@ -3,6 +3,8 @@ import MobileNavBar from "../components/MobileNavBar";
 import Header from "../components/Header";
 import ResponsiveContainer from "../components/ResponsiveContainer";
 import ProjectCard from "../components/ProjectCard";
+import DesktopNavBar from "../components/DesktopNavBar";
+import DesktopAdminHeader from "../components/DesktopAdminHeader";
 
 // REACT
 import { useState, useMemo } from "react";
@@ -13,7 +15,7 @@ import { useProjects } from "../contexts/ProjectsContext";
 // ICON
 import { Search, ListFilter } from "lucide-react";
 
-export default function StartupProjects() {
+const AdminApprovals = () => {
   const { projects } = useProjects();
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,14 +49,15 @@ export default function StartupProjects() {
         thumbnail={p.thumbnailUrl}
         goal={formattedGoal}
         funded={fundPercent}
-        role={"startup"}
+        role={"admin"}
       />
     );
   });
-
   return (
-    <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header title={"Startup Dashboard"} role={"startup"} />
+    <div className={"bg-neutral-950 w-full min-h-dvh lg:pl-72"}>
+      <Header title={"Admin Dashboard"} role={"admin"} />
+      <DesktopAdminHeader />
+      <DesktopNavBar title="investment portal" role="admin" />
       {/* MAIN CONTENT */}
       <ResponsiveContainer>
         {/* SEARCH + FILTERATION  */}
@@ -140,7 +143,9 @@ export default function StartupProjects() {
         {/* ===== PROJECTS CARDS ===== */}
       </ResponsiveContainer>
       {/* ====== MAIN CONTENT ===== */}
-      <MobileNavBar role="startup" />
+      <MobileNavBar role="admin" />
     </div>
   );
-}
+};
+
+export default AdminApprovals;

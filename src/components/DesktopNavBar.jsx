@@ -1,27 +1,30 @@
+// ICONS
+import { LayoutDashboard, Settings, ListTodo } from "lucide-react";
+
 // REACT ROUTER
 import { Link, useLocation } from "react-router-dom";
 
 // REACT
 import { useMemo } from "react";
 
-// NAV LINKS GROUP
+// NAV LINKS
 import { getNavLinks } from "../config/navLinks";
 
-export default function MobileNavBar({ role }) {
+const DesktopNavBar = ({ title, role }) => {
   const location = useLocation();
   const currentPath = location.pathname;
   const navLinks = useMemo(() => {
     return getNavLinks(role);
   }, [role]);
-
   return (
-    // NAVIGATION BAR
-    <nav
-      className={
-        "md:hidden fixed gap-2 px-4 bottom-0 pb-8 pt-4 bg-neutral/80 backdrop-blur-md w-full shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50"
-      }
-    >
-      <div className={"flex justify-around "}>
+    <nav className="hidden lg:flex flex-col fixed left-7 top-24 h-dvh w-64 z-50">
+      {/* DESKTOP NAVBAR TITLE */}
+      <h2 className="font-semibold mb-5 tracking-widest">
+        {title.toUpperCase()}
+      </h2>
+      {/* ===== DESKTOP NAVBAR TITLE ===== */}
+      {/* DESKTOP NAVBAR LINK */}
+      <ul className="flex flex-col justify-center gap-y-3 w-1/5">
         {navLinks.map((link) => {
           const Icon = link.icon;
           const isRoot = link.path === "/admin" || link.path === "/startup";
@@ -34,18 +37,21 @@ export default function MobileNavBar({ role }) {
               to={link.path}
               className={
                 isActive
-                  ? "flex-1 flex flex-col justify-center items-center bg-primary text-neutral py-2.5 px-4.5 rounded-xl transition-colors duration-500 ease-in-out"
-                  : "flex-1 flex flex-col justify-center items-center text-primary-600 py-2.5 px-4.5"
+                  ? "flex-1 flex gap-5 justify-start items-center border-r-primary border-r-2 w-64 bg-neutral text-primary py-2.5 px-4.5 transition-colors duration-500 ease-in-out"
+                  : "flex-1 flex gap-5 justify-start items-center text-neutral-500 w-64 py-2.5 px-4.5"
               }
             >
-              <Icon className="w-6 h-6 stroke-3 mb-1" />
+              <Icon className="w-6 h-6 stroke-2.5" />
               <span className="font-bold text-[12px] select-none">
                 {link.label.toUpperCase()}
               </span>
             </Link>
           );
         })}
-      </div>
+      </ul>
+      {/* ===== DESKTOP NAVBAR LINK ===== */}
     </nav>
   );
-}
+};
+
+export default DesktopNavBar;
