@@ -151,7 +151,7 @@ export default function StartupDashboard() {
             title={"MONTHLY FUNDS REQUESTED"}
             value={formattedFundsRequested}
           />
-          <SummaryCard title={"avg. growth"} value={fundsTrend} />
+          <SummaryCard title={"monthly funds trend"} value={fundsTrend} />
         </div>
         {/* ====== SUMMARY CARDAS ===== */}
 

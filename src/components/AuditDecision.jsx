@@ -1,5 +1,5 @@
 // COMPONENTS
-import Textarea from "./Textarea";
+import TextArea from "./TextArea";
 
 // ICONS
 import { Check, X, SquarePen } from "lucide-react";
