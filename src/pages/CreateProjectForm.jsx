@@ -227,7 +227,7 @@ export default function CreateProjectForm() {
             <span className={"font-bold lg:text-lg"}>Submit for Approval</span>
           </button>
           <Link
-            to={"/startup/creation-form/submit"}
+            to={"/startup"}
             className="flex justify-center max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl w-full mb-2.5 text-primary rounded-xl p-3"
           >
             <span className={"font-bold lg:text-lg"}>Cancel</span>

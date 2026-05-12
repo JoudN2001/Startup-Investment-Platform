@@ -74,7 +74,7 @@ export default function StartupProjects() {
                   setSearchQuery(e.target.value);
                 }}
                 type="search"
-                placeholder="Search by student name or ID..."
+                placeholder="Search by project name..."
                 className="w-full h-12 pl-12 pr-4 bg-neutral border-2 border-transparent rounded-lg outline-none transition-all duration-300 focus:bg-white focus:border-neutral-800 text-primary font-medium"
               />
             </div>

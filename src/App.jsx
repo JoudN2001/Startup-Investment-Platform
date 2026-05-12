@@ -10,6 +10,10 @@ import AdminApprovals from "./pages/AdminApprovals";
 import AdminSettings from "./pages/AdminSettings";
 import ProjectDetails from "./pages/ProjectDetails";
 import SignInPage from "./pages/SignInPage";
+import InvestorDashboard from "./pages/InvestorDashboard";
+import InvestorProjects from "./pages/InvestorProjects";
+import InvestorSettings from "./pages/InvestorSettings";
+import SubmitProjectInvestment from "./pages/SubmitProjectInvestment";
 
 // REACT ROUTER
 import { Route, Routes } from "react-router-dom";
@@ -18,7 +22,7 @@ import { Route, Routes } from "react-router-dom";
 import { ProjectsProvider } from "./contexts/ProjectsContext";
 
 function App() {
-  // TODO (Phase 3 - Backend Integration):
+  // TODO (Phase 4 - Backend Integration):
   // Replace these public routes with <ProtectedRoute> wrappers.
   // Current implementation relies on UI-level role props (prototype only).
   // Needs real validation via Token/Session state once the Auth layer is built.
@@ -42,6 +46,20 @@ function App() {
           <Route path="settings" element={<StartupSettings />} />
         </Route>
         {/* ===== STARTUP PAGES ===== */}
+
+        {/* INVESTOR PAGES */}
+        <Route path="/investor">
+          <Route index element={<InvestorDashboard />} />
+          <Route path="projects">
+            <Route index element={<InvestorProjects />} />
+            <Route path="project-details/:projectId">
+              <Route index element={<ProjectDetails role="investor" />} />
+              <Route path="submit" element={<SubmitProjectInvestment />} />
+            </Route>
+          </Route>
+          <Route path="settings" element={<InvestorSettings />} />
+        </Route>
+        {/* ===== INVESTOR PAGES ===== */}
 
         {/* ADMIN PAGES */}
         <Route path="/admin">

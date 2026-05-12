@@ -35,10 +35,14 @@ export default function ProjectCard({
       {/* ===== IMAGE & STATUS ===== */}
       {/* TITEL & DESCREOPTION + PROGRESS BAR & DETAILS */}
       <div className="flex justify-between items-center">
-        <h1 className={"text-3xl font-bold my-2 max-w-2/3 truncate"}>{title}</h1>
-        {!thumbnail && <span className="bg-neutral-900/60 text-neutral-400 backdrop-blur-xl py-1 px-2 text-xs font-semibold rounded-full">
-          {status.toUpperCase()}
-        </span>}
+        <h1 className={"text-3xl font-bold my-2 max-w-2/3 truncate"}>
+          {title}
+        </h1>
+        {!thumbnail && (
+          <span className="bg-neutral-900/60 text-neutral-400 backdrop-blur-xl py-1 px-2 text-xs font-semibold rounded-full">
+            {status.toUpperCase()}
+          </span>
+        )}
       </div>
       <p className={"text-neutral-400 font-medium text-base/6 truncate"}>
         {description}
@@ -57,7 +61,9 @@ export default function ProjectCard({
           to={
             role === "admin"
               ? `/admin/approvals/project-details/${projectId}`
-              : `/startup/projects/project-details/${projectId}`
+              : role === "startup"
+                ? `/startup/projects/project-details/${projectId}`
+                : `/investor/projects/project-details/${projectId}`
           }
           className={
             "flex items-center gap-1 font-extrabold hover:text-tertiary-600 transition-colors"

@@ -24,7 +24,10 @@ export default function MobileNavBar({ role }) {
       <div className={"flex justify-around "}>
         {navLinks.map((link) => {
           const Icon = link.icon;
-          const isRoot = link.path === "/admin" || link.path === "/startup";
+          const isRoot =
+            link.path === "/admin" ||
+            link.path === "/startup" ||
+            link.path === "/investor";
           const isActive = isRoot
             ? currentPath === link.path
             : currentPath.startsWith(link.path);
