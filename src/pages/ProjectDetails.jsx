@@ -21,7 +21,7 @@ import { useProjects } from "../contexts/ProjectsContext";
 import { TextAlignStart, ArrowRight } from "lucide-react";
 
 // REACT
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 // CHECK ERROR ON LOCAL STORAGE
 import { saveProjectsToStorage } from "../utils/storage";
@@ -35,6 +35,18 @@ import { useForm } from "react-hook-form";
 
 // EXTERNAL LIBRARYS
 import { v4 as uuidv4 } from "uuid";
+
+const currencyFormatter = new Intl.NumberFormat("en", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
+
+const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
 
 const ProjectDetails = ({ role }) => {
   const { projectId } = useParams();
@@ -74,7 +86,6 @@ const ProjectDetails = ({ role }) => {
       ...selectedProject.investors,
       { id: uuidv4(), name: "Naya", amount: data.minmumInvestement },
     ];
-    console.log(newinvest);
     const newProject = {
       ...selectedProject,
       investors: newinvest,
@@ -91,51 +102,42 @@ const ProjectDetails = ({ role }) => {
   };
 
   // FORMATED DATA
-  const { formattedGoal, formattedMinInvest, fundPercent, lastUpdate } =
-    useMemo(() => {
-      if (!selectedProject) {
-        return {
-          formattedGoal: "",
-          formattedMinInvest: "",
-          fundPercent: false,
-          lastUpdate: "",
-        };
-      }
-
-      const goal = new Intl.NumberFormat("en", {
-        style: "currency",
-        currency: "USD",
-        maximumFractionDigits: 0,
-      }).format(Number(selectedProject.goal));
-
-      const minInvest = new Intl.NumberFormat("en", {
-        style: "currency",
-        currency: "USD",
-        maximumFractionDigits: 0,
-      }).format(Number(selectedProject.minInvest));
-
-      const percent =
-        selectedProject.currentRaised !== 0
-          ? (Number(selectedProject.currentRaised) /
-              Number(selectedProject.goal)) *
-            100
-          : false;
-
-      const updated = selectedProject.updatedAt
-        ? new Intl.DateTimeFormat("en-GB", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          }).format(new Date(selectedProject.updatedAt))
-        : "Not updated yet";
-
+  const getFormattedData = () => {
+    if (!selectedProject) {
       return {
-        formattedGoal: goal,
-        formattedMinInvest: minInvest,
-        fundPercent: percent,
-        lastUpdate: updated,
+        formattedGoal: "",
+        formattedMinInvest: "",
+        fundPercent: false,
+        lastUpdate: "",
       };
-    }, [selectedProject]);
+    }
+
+    const goal = currencyFormatter.format(Number(selectedProject.goal));
+    const minInvest = currencyFormatter.format(
+      Number(selectedProject.minInvest),
+    );
+
+    const percent =
+      selectedProject.currentRaised !== 0
+        ? (Number(selectedProject.currentRaised) /
+            Number(selectedProject.goal)) *
+          100
+        : false;
+
+    const updated = selectedProject.updatedAt
+      ? dateFormatter.format(new Date(selectedProject.updatedAt))
+      : "Not updated yet";
+
+    return {
+      formattedGoal: goal,
+      formattedMinInvest: minInvest,
+      fundPercent: percent,
+      lastUpdate: updated,
+    };
+  };
+
+  const { formattedGoal, formattedMinInvest, fundPercent, lastUpdate } =
+    getFormattedData();
 
   // HANDLE FORM EVENTS
   const handleDecision = (newStatus) => {
@@ -249,7 +251,7 @@ const ProjectDetails = ({ role }) => {
                 />
                 <button
                   type="submit"
-                  className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mt-2.5 mb-2.5 bg-primary text-neutral rounded-xl p-4 active:bg-secondary-200 transition-colors"
+                  className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mt-2.5 mb-2.5 cursor-pointer bg-primary text-neutral rounded-xl p-4 active:bg-secondary-200 transition-colors"
                 >
                   <span className="font-bold lg:text-lg flex justify-center gap-2.5 items-center">
                     INVEST NOW

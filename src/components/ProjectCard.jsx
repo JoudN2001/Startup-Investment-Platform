@@ -63,7 +63,9 @@ export default function ProjectCard({
               ? `/admin/approvals/project-details/${projectId}`
               : role === "startup"
                 ? `/startup/projects/project-details/${projectId}`
-                : `/investor/projects/project-details/${projectId}`
+                : role === "investor"
+                  ? `/investor/projects/project-details/${projectId}`
+                  : "/sign-in"
           }
           className={
             "flex items-center gap-1 font-extrabold hover:text-tertiary-600 transition-colors"

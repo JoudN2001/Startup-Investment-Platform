@@ -10,10 +10,13 @@ import AdminApprovals from "./pages/AdminApprovals";
 import AdminSettings from "./pages/AdminSettings";
 import ProjectDetails from "./pages/ProjectDetails";
 import SignInPage from "./pages/SignInPage";
+import SignUpPage from "./pages/SignUpPage";
 import InvestorDashboard from "./pages/InvestorDashboard";
 import InvestorProjects from "./pages/InvestorProjects";
 import InvestorSettings from "./pages/InvestorSettings";
 import SubmitProjectInvestment from "./pages/SubmitProjectInvestment";
+import LandingPage from "./pages/LandingPage";
+import SubmitNewAccount from "./pages/SubmitNewAccount";
 
 // REACT ROUTER
 import { Route, Routes } from "react-router-dom";
@@ -75,7 +78,11 @@ function App() {
         </Route>
         {/* ===== ADMIN PAGES ===== */}
 
-        <Route path="/" element={<SignInPage />} />
+        {}
+        <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/sign-up" element={<SignUpPage />} />
+        <Route path="/sign-up/submit" element={<SubmitNewAccount />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="*" element={<NotFound404 role="startup" />} />
       </Routes>
     </ProjectsProvider>
