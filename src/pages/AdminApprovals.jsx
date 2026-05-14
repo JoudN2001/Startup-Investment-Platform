@@ -38,7 +38,8 @@ const AdminApprovals = () => {
       currency: "USD",
       maximumFractionDigits: 0,
     }).format(Number(p.goal));
-    const fundPercent = (Number(p.currentRaised) / Number(p.goal)) * 100 || 0;
+    const fundPercent =
+      Math.round((Number(p.currentRaised) / Number(p.goal)) * 100) || 0;
     return (
       <ProjectCard
         key={p.id}
@@ -77,8 +78,8 @@ const AdminApprovals = () => {
                   setSearchQuery(e.target.value);
                 }}
                 type="search"
-                placeholder="Search by student name or ID..."
-                className="w-full h-12 pl-12 pr-4 bg-neutral border-2 border-transparent rounded-lg outline-none transition-all duration-300 focus:bg-white focus:border-neutral-800 text-primary font-medium"
+                placeholder="Search by project name..."
+                className="w-full h-12 pl-12 pr-4 bg-neutral border-2 border-transparent rounded-lg outline-none transition-all duration-300 focus:bg-neutral focus:border-neutral-800 text-primary font-medium"
               />
             </div>
           </form>

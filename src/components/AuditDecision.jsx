@@ -25,7 +25,7 @@ const AuditDecision = ({
       </p>
       {role === "admin" && (
         <>
-          <Textarea
+          <TextArea
             title="ADMIN NOTES & PUBLIC FEEDBACK"
             description="Provide detailed reasons if rejecting or requesting revisions..."
             hint="OPTIONAL"

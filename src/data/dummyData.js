@@ -14,7 +14,10 @@ export const dummyProjects = [
     createdAt: "2026-03-15T10:30:00.000Z",
     updatedAt: "2026-04-01T14:20:00.000Z",
     adminFeedback: "",
-    investors: [],
+    investors: [
+      { id: "inv-101", name: "Joud Al-Masri", amount: 450000 },
+      { id: "inv-102", name: "Omar Khatib", amount: 450000 },
+    ],
   },
   {
     id: "proj-002",
@@ -31,7 +34,9 @@ export const dummyProjects = [
     createdAt: "2026-04-18T09:15:00.000Z",
     updatedAt: "2026-04-18T09:15:00.000Z",
     adminFeedback: "",
-    investors: [],
+    investors: [
+       { id: "inv-103", name: "Venture Capital Group", amount: 420000 },
+    ],
   },
   {
     id: "proj-003",
@@ -50,7 +55,10 @@ export const dummyProjects = [
     createdAt: "2026-01-10T11:00:00.000Z",
     updatedAt: "2026-03-22T16:45:00.000Z",
     adminFeedback: "",
-    investors: [],
+    investors: [
+      { id: "inv-104", name: "Green Earth Funds", amount: 500000 },
+      { id: "inv-105", name: "Samir Haddad", amount: 350000 },
+    ],
   },
   {
     id: "proj-004",
@@ -64,9 +72,12 @@ export const dummyProjects = [
     minInvest: 5000,
     currentRaised: 2100000, // 42%
     createdAt: "2026-02-05T08:30:00.000Z",
-    updatedAt: "2026-02-28T10:00:00.000Z",
+    updatedAt: "2026-05-10T10:00:00.000Z", // Very recently updated
     adminFeedback: "",
-    investors: [],
+    investors: [
+      { id: "inv-106", name: "MedTech Ventures", amount: 2000000 },
+      { id: "inv-107", name: "Dr. Sarah Amin", amount: 100000 },
+    ],
   },
   {
     id: "proj-005",
@@ -83,7 +94,7 @@ export const dummyProjects = [
     updatedAt: "2026-04-12T09:20:00.000Z",
     adminFeedback:
       "The financial forecasting lacks realistic user acquisition costs. Please revise and resubmit.",
-    investors: [],
+    investors: [], // Rejected projects shouldn't have investors
   },
   {
     id: "proj-006",
@@ -98,9 +109,12 @@ export const dummyProjects = [
     minInvest: 250,
     currentRaised: 3696000, // 88%
     createdAt: "2025-11-20T10:00:00.000Z",
-    updatedAt: "2026-04-05T11:30:00.000Z",
+    updatedAt: "2026-05-01T11:30:00.000Z",
     adminFeedback: "",
-    investors: [],
+    investors: [
+       { id: "inv-108", name: "Global Oceans Initiative", amount: 3000000 },
+       { id: "inv-109", name: "Anonymous Investor", amount: 696000 },
+    ],
   },
   {
     id: "proj-007",
@@ -113,11 +127,11 @@ export const dummyProjects = [
     attachedFilesUrls: ["https://example.com/specs.pdf"],
     goal: 1500000,
     minInvest: 100,
-    currentRaised: 75000, // 5%
-    createdAt: "2026-04-20T15:10:00.000Z",
-    updatedAt: "2026-04-20T15:10:00.000Z",
+    currentRaised: 0, 
+    createdAt: "2026-05-11T15:10:00.000Z", // Created just yesterday
+    updatedAt: "2026-05-11T15:10:00.000Z",
     adminFeedback: "",
-    investors: [],
+    investors: [], // Pending projects usually don't have public investors yet
   },
   {
     id: "proj-008",
@@ -131,9 +145,12 @@ export const dummyProjects = [
     minInvest: 200,
     currentRaised: 540000, // 60%
     createdAt: "2026-01-25T09:00:00.000Z",
-    updatedAt: "2026-03-10T14:00:00.000Z",
+    updatedAt: "2026-04-10T14:00:00.000Z",
     adminFeedback: "",
-    investors: [],
+    investors: [
+      { id: "inv-110", name: "EdTech Capital", amount: 500000 },
+      { id: "inv-111", name: "Lina Qasem", amount: 40000 },
+    ],
   },
   {
     id: "proj-009",
@@ -150,7 +167,10 @@ export const dummyProjects = [
     createdAt: "2025-09-15T08:20:00.000Z",
     updatedAt: "2026-02-01T10:10:00.000Z",
     adminFeedback: "",
-    investors: [],
+    investors: [
+      { id: "inv-112", name: "Food Future Partners", amount: 2000000 },
+      { id: "inv-113", name: "Tariq Ziad", amount: 800000 },
+    ],
   },
   {
     id: "proj-010",
@@ -167,9 +187,10 @@ export const dummyProjects = [
     createdAt: "2026-03-01T12:00:00.000Z",
     updatedAt: "2026-04-15T09:45:00.000Z",
     adminFeedback: "",
-    investors: [],
+    investors: [
+      { id: "inv-114", name: "Astro Fund", amount: 2500000 },
+    ],
   },
-
   {
     id: "proj-011",
     title: "Desert Solar Farm (No Image)",
@@ -181,8 +202,8 @@ export const dummyProjects = [
     goal: 5500000,
     minInvest: 1000,
     currentRaised: 0,
-    createdAt: "2026-04-21T08:00:00.000Z",
-    updatedAt: "2026-04-21T08:00:00.000Z",
+    createdAt: "2026-05-05T08:00:00.000Z",
+    updatedAt: "2026-05-05T08:00:00.000Z",
     adminFeedback: "",
     investors: [],
   },
@@ -213,10 +234,12 @@ export const dummyProjects = [
     attachedFilesUrls: [],
     goal: 50000,
     minInvest: 10,
-    currentRaised: 75000, 
-    createdAt: "2026-05-01T10:00:00.000Z",
-    updatedAt: "2026-06-10T12:00:00.000Z",
+    currentRaised: 75000, // Overfunded
+    createdAt: "2026-01-01T10:00:00.000Z",
+    updatedAt: "2026-02-10T12:00:00.000Z",
     adminFeedback: "",
-    investors: [],
+    investors: [
+      { id: "inv-115", name: "Micro-Investor Syndicate", amount: 75000 },
+    ],
   },
 ];

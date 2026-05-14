@@ -1,8 +1,7 @@
 export default function ErrorIcon() {
   return (
-    <div className="absolute top-0 end-0 flex items-start p-5 pointer-events-none">
       <svg
-        className="shrink-0 size-4 text-red-500"
+        className="shrink-0 size-5 text-error"
         xmlns="http://www.w3.org/2000/svg"
         width="24"
         height="24"
@@ -17,6 +16,5 @@ export default function ErrorIcon() {
         <line x1="12" x2="12" y1="8" y2="12" />
         <line x1="12" x2="12.01" y1="16" y2="16" />
       </svg>
-    </div>
   );
 }

@@ -61,7 +61,11 @@ const TextArea = forwardRef(
               }
             ></textarea>
             {/* ICON TEXTAREA */}
-            {error && <ErrorIcon />}
+            {error && (
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center">
+                <ErrorIcon />
+              </div>
+            )}
             {/* ===== ICON TEXTAREA ===== */}
           </div>
           <p

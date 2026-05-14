@@ -10,6 +10,13 @@ import AdminApprovals from "./pages/AdminApprovals";
 import AdminSettings from "./pages/AdminSettings";
 import ProjectDetails from "./pages/ProjectDetails";
 import SignInPage from "./pages/SignInPage";
+import SignUpPage from "./pages/SignUpPage";
+import InvestorDashboard from "./pages/InvestorDashboard";
+import InvestorProjects from "./pages/InvestorProjects";
+import InvestorSettings from "./pages/InvestorSettings";
+import SubmitProjectInvestment from "./pages/SubmitProjectInvestment";
+import LandingPage from "./pages/LandingPage";
+import SubmitNewAccount from "./pages/SubmitNewAccount";
 
 // REACT ROUTER
 import { Route, Routes } from "react-router-dom";
@@ -18,7 +25,7 @@ import { Route, Routes } from "react-router-dom";
 import { ProjectsProvider } from "./contexts/ProjectsContext";
 
 function App() {
-  // TODO (Phase 3 - Backend Integration):
+  // TODO (Phase 4 - Backend Integration):
   // Replace these public routes with <ProtectedRoute> wrappers.
   // Current implementation relies on UI-level role props (prototype only).
   // Needs real validation via Token/Session state once the Auth layer is built.
@@ -43,6 +50,20 @@ function App() {
         </Route>
         {/* ===== STARTUP PAGES ===== */}
 
+        {/* INVESTOR PAGES */}
+        <Route path="/investor">
+          <Route index element={<InvestorDashboard />} />
+          <Route path="projects">
+            <Route index element={<InvestorProjects />} />
+            <Route path="project-details/:projectId">
+              <Route index element={<ProjectDetails role="investor" />} />
+              <Route path="submit" element={<SubmitProjectInvestment />} />
+            </Route>
+          </Route>
+          <Route path="settings" element={<InvestorSettings />} />
+        </Route>
+        {/* ===== INVESTOR PAGES ===== */}
+
         {/* ADMIN PAGES */}
         <Route path="/admin">
           <Route index element={<AdminDashboard />} />
@@ -57,7 +78,10 @@ function App() {
         </Route>
         {/* ===== ADMIN PAGES ===== */}
 
-        <Route path="/" element={<SignInPage />} />
+        <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/sign-up" element={<SignUpPage />} />
+        <Route path="/sign-up/submit" element={<SubmitNewAccount />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="*" element={<NotFound404 role="startup" />} />
       </Routes>
     </ProjectsProvider>

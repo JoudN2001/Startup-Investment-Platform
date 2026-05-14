@@ -1,4 +1,4 @@
-// REACT 
+// REACT
 import { useState, useEffect, useMemo } from "react";
 
 // REACT ROUTER
@@ -167,7 +167,17 @@ export default function NotFound404({ role }) {
             dashboard.
           </p>
 
-          <Link to={role === "admin" ? "/admin" : "/startup"}>
+          <Link
+            to={
+              role === "admin"
+                ? "/admin"
+                : role === "startup"
+                  ? "/startup"
+                  : role === "incestor"
+                    ? "/investor"
+                    : "/"
+            }
+          >
             <button className="group relative z-10 overflow-hidden border-2 border-primary text-primary font-bold text-lg tracking-[2px] px-12 py-3 rounded-full transition-colors duration-200 hover:text-neutral mt-4 cursor-pointer">
               <span className="absolute inset-0 w-0 bg-primary transition-all duration-300 ease-out group-hover:w-full -z-10"></span>
               RETURN HOME

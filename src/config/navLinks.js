@@ -26,6 +26,28 @@ const getNavLinks = (role) => {
         },
       ];
       break;
+    case "investor":
+      navLinks = [
+        {
+          id: "dashboard",
+          label: "dashboard",
+          icon: LayoutDashboard,
+          path: "/investor",
+        },
+        {
+          id: "projects",
+          label: "projects",
+          icon: FolderTree,
+          path: "/investor/projects",
+        },
+        {
+          id: "settings",
+          label: "settings",
+          icon: Settings,
+          path: "/investor/settings",
+        },
+      ];
+      break;
     case "admin":
       navLinks = [
         {

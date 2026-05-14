@@ -16,15 +16,14 @@ export default function MobileNavBar({ role }) {
 
   return (
     // NAVIGATION BAR
-    <nav
-      className={
-        "md:hidden fixed gap-2 px-4 bottom-0 pb-8 pt-4 bg-neutral/80 backdrop-blur-md w-full shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50"
-      }
-    >
+    <nav className="md:hidden fixed gap-2 px-4 bottom-0 pb-8 pt-4 bg-neutral/80 backdrop-blur-md w-full shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
       <div className={"flex justify-around "}>
         {navLinks.map((link) => {
           const Icon = link.icon;
-          const isRoot = link.path === "/admin" || link.path === "/startup";
+          const isRoot =
+            link.path === "/admin" ||
+            link.path === "/startup" ||
+            link.path === "/investor";
           const isActive = isRoot
             ? currentPath === link.path
             : currentPath.startsWith(link.path);

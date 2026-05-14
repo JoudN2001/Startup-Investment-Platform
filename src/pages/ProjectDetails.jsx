@@ -9,6 +9,7 @@ import FileCard from "../components/FileCard";
 import LastAction from "../components/LastAction";
 import AuditDecision from "../components/AuditDecision";
 import NotFound404 from "./NotFound404";
+import InputFiled from "../components/InputField";
 
 // REACT ROUTER
 import { useParams, useNavigate } from "react-router-dom";
@@ -17,7 +18,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useProjects } from "../contexts/ProjectsContext";
 
 // ICONS
-import { TextAlignStart } from "lucide-react";
+import { TextAlignStart, ArrowRight } from "lucide-react";
 
 // REACT
 import { useMemo, useState } from "react";
@@ -25,12 +26,68 @@ import { useMemo, useState } from "react";
 // CHECK ERROR ON LOCAL STORAGE
 import { saveProjectsToStorage } from "../utils/storage";
 
+// SCHEMA VALIDATION LIBRARY
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// FORM LIBRARY
+import { useForm } from "react-hook-form";
+
+// EXTERNAL LIBRARYS
+import { v4 as uuidv4 } from "uuid";
+
 const ProjectDetails = ({ role }) => {
   const { projectId } = useParams();
   const { projects, setProjects } = useProjects();
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState("");
   const selectedProject = projects.find((p) => p.id === projectId);
+
+  // VALIDATION DATA FIELD CHECK
+  const createProjectFormSchema = z
+    .object({
+      minmumInvestement: z.coerce
+        .number({
+          required_error: "Minimum investment is required.",
+          invalid_type_error: "Please enter a valid number.",
+        })
+        .positive("Amount must be greater than zero!"),
+    })
+    .refine((data) => data.minmumInvestement >= selectedProject.minInvest, {
+      message: "Your investment must be greater than the minimum investment",
+      path: ["minmumInvestement"],
+    });
+
+  // USEFORM HOOK WITH SECHEMA VALIDATION
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(createProjectFormSchema),
+  });
+
+  // HANDLE SUBMIT FORM
+  const onSubmit = (data) => {
+    // TODO: add username by each account in phase 4
+    const newinvest = [
+      ...selectedProject.investors,
+      { id: uuidv4(), name: "Naya", amount: data.minmumInvestement },
+    ];
+    const newProject = {
+      ...selectedProject,
+      investors: newinvest,
+      currentRaised: selectedProject.currentRaised + data.minmumInvestement,
+    };
+    const updatedProjects = projects.map((p) =>
+      p.id === selectedProject.id ? newProject : p,
+    );
+    const isSaved = saveProjectsToStorage(updatedProjects);
+    if (isSaved) {
+      setProjects(updatedProjects);
+      navigate(`/investor/projects/project-details/${projectId}/submit`);
+    }
+  };
 
   // FORMATED DATA
   const { formattedGoal, formattedMinInvest, fundPercent, lastUpdate } =
@@ -58,9 +115,11 @@ const ProjectDetails = ({ role }) => {
 
       const percent =
         selectedProject.currentRaised !== 0
-          ? (Number(selectedProject.currentRaised) /
-              Number(selectedProject.goal)) *
-            100
+          ? Math.round(
+              (Number(selectedProject.currentRaised) /
+                Number(selectedProject.goal)) *
+                100,
+            )
           : false;
 
       const updated = selectedProject.updatedAt
@@ -159,57 +218,111 @@ const ProjectDetails = ({ role }) => {
           </div>
           {/* ===== DETAILS CARDS ===== */}
 
-          <div className="md:hidden">
-            {/* ATTACHED FILES */}
-            <div className="my-7.5">
-              <h1 className="text-md text-neutral-400 tracking-wide font-semibold mb-6">
-                VERIFIED DOCUMENTATION
-              </h1>
-              <div className="flex flex-col gap-3">
-                {selectedProject.attachedFilesUrls.map((f, index) => {
-                  return <FileCard key={index} fileName={f} />;
-                })}
+          {/* INVESTORS */}
+          {role === "investor" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+              {/* ATTACHED FILES */}
+              <div className="my-7.5">
+                <h1 className="text-md text-neutral-400 tracking-wide font-semibold mb-6">
+                  VERIFIED DOCUMENTATION
+                </h1>
+                <div className="flex flex-col gap-3">
+                  {selectedProject.attachedFilesUrls.map((f, index) => {
+                    return <FileCard key={index} fileName={f} />;
+                  })}
+                </div>
               </div>
+              {/* ====== ATTACHED FILES ====== */}
+
+              {/* INVESTMENT FIELD FOR INVESTORS */}
+              <form
+                noValidate
+                onSubmit={handleSubmit(onSubmit)}
+                className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mb-35"
+              >
+                <InputFiled
+                  type="number"
+                  title="minimum investment ($)"
+                  placeholder={formattedMinInvest}
+                  hint="USD"
+                  error={errors.minmumInvestement}
+                  {...register("minmumInvestement")}
+                />
+                <button
+                  type="submit"
+                  className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mt-2.5 mb-2.5 cursor-pointer bg-primary text-neutral rounded-xl p-4 active:bg-secondary-200 transition-colors"
+                >
+                  <span className="font-bold lg:text-lg flex justify-center gap-2.5 items-center">
+                    INVEST NOW
+                    <ArrowRight className="w-6 h-6 stroke-3" />
+                  </span>
+                </button>
+              </form>
+              {/* ===== INVESTMENT FIELD FOR INVESTORS ===== */}
             </div>
-            {/* ====== ATTACHED FILES ====== */}
+          )}
+          {/* ===== INVESTORS ===== */}
 
-            {/* AUDIT DECISION FORM */}
-            <AuditDecision
-              role={role}
-              handleDecision={handleDecision}
-              selectedProject={selectedProject}
-              feedback={feedback}
-              setFeedback={setFeedback}
-            />
-            {/* ===== AUDIT DECISION FORM ===== */}
-
-            <LastAction lastUpdate={lastUpdate} />
-          </div>
-
-          {/* DESKTOP AND TABLET DECISITION + FILES */}
-          <div className="hidden md:grid grid-cols-2 gap-6">
-            <div className="my-7.5">
-              <h1 className="text-md text-neutral-400 tracking-wide font-semibold mb-6">
-                VERIFIED DOCUMENTATION
-              </h1>
-              <div className="flex flex-col gap-3">
-                {selectedProject.attachedFilesUrls.map((f, index) => {
-                  return <FileCard key={index} fileName={f} />;
-                })}
-                <LastAction lastUpdate={lastUpdate} />
+          {/* STARTUP & ADMIN */}
+          {role !== "investor" && (
+            <div className="md:hidden">
+              {/* ATTACHED FILES */}
+              <div className="my-7.5">
+                <h1 className="text-md text-neutral-400 tracking-wide font-semibold mb-6">
+                  VERIFIED DOCUMENTATION
+                </h1>
+                <div className="flex flex-col gap-3">
+                  {selectedProject.attachedFilesUrls.map((f, index) => {
+                    return <FileCard key={index} fileName={f} />;
+                  })}
+                </div>
               </div>
+              {/* ====== ATTACHED FILES ====== */}
+
+              {/* AUDIT DECISION FORM */}
+              <AuditDecision
+                role={role}
+                handleDecision={handleDecision}
+                selectedProject={selectedProject}
+                feedback={feedback}
+                setFeedback={setFeedback}
+              />
+              {/* ===== AUDIT DECISION FORM ===== */}
+
+              <LastAction lastUpdate={lastUpdate} />
             </div>
-            {/* AUDIT DECISION FORM */}
-            <AuditDecision
-              role={role}
-              handleDecision={handleDecision}
-              selectedProject={selectedProject}
-              feedback={feedback}
-              setFeedback={setFeedback}
-            />
-            {/* ===== AUDIT DECISION FORM ===== */}
-          </div>
-          {/* ===== DESKTOP AND TABLET DECISITION + FILES ===== */}
+          )}
+          {/* ===== STARTUP & ADMIN ===== */}
+
+          {/* ===== DESKTOP STARTUP & ADMIN ===== */}
+          {role !== "investor" && (
+            <div className="hidden md:grid grid-cols-2 gap-6">
+              {/* ATTACHED FILES */}
+              <div className="my-7.5">
+                <h1 className="text-md text-neutral-400 tracking-wide font-semibold mb-6">
+                  VERIFIED DOCUMENTATION
+                </h1>
+                <div className="flex flex-col gap-3">
+                  {selectedProject.attachedFilesUrls.map((f, index) => {
+                    return <FileCard key={index} fileName={f} />;
+                  })}
+                  <LastAction lastUpdate={lastUpdate} />
+                </div>
+              </div>
+              {/* ===== ATTACHED FILES ===== */}
+
+              {/* AUDIT DECISION FORM */}
+              <AuditDecision
+                role={role}
+                handleDecision={handleDecision}
+                selectedProject={selectedProject}
+                feedback={feedback}
+                setFeedback={setFeedback}
+              />
+              {/* ===== AUDIT DECISION FORM ===== */}
+            </div>
+          )}
+          {/* ===== DESKTOP STARTUP & ADMIN ===== */}
         </main>
         {/* ===== PROJECTS DETAILS ===== */}
       </ResponsiveContainer>

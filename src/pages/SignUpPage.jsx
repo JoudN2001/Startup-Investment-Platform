@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 
 // ICONS
-import { User, Lock } from "lucide-react";
+import { User, Lock, AtSign } from "lucide-react";
 
 // SCHEMA VALIDATION LIBRARY
 import { z } from "zod";
@@ -11,61 +11,95 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // FORM LIBRARY
 import { useForm } from "react-hook-form";
 
-const SignInPage = () => {
+const SignUpPage = () => {
   // USER NAME & PASSWORD SCHEMA
-  const signInSchema = z.object({
-    userName: z.string().min(1, { message: "Username is required" }),
-    password: z.string().min(1, { message: "Password is required" }),
-  });
+  const signUpSchema = z
+    .object({
+      fullName: z
+        .string()
+        .min(3, { message: "Full name must be at least 3 characters" }),
+
+      email: z.email({ message: "Please enter a valid email address" }),
+
+      userName: z
+        .string()
+        .min(3, { message: "Username must be at least 3 characters" }),
+
+      password: z
+        .string()
+        .min(8, { message: "Password must be at least 8 characters" }),
+
+      confirmPassword: z
+        .string()
+        .min(1, { message: "Please confirm your password" }),
+
+      termsAndPolicies: z.boolean().refine((val) => val === true, {
+        message: "You must accept the terms and policies to sign up",
+      }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    });
 
   // USEFORM LIBRARY
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(signInSchema) });
+  } = useForm({ resolver: zodResolver(signUpSchema) });
 
   const navigate = useNavigate();
 
   // HANDLE SIGN IN
-  const onSignIn = (data) => {
-    // DEMO USERS
-    const adminUser = import.meta.env.VITE_DEMO_ADMIN_USER;
-    const adminPass = import.meta.env.VITE_DEMO_ADMIN_PASS;
-    const startupUser = import.meta.env.VITE_DEMO_STARTUP_USER;
-    const startupPass = import.meta.env.VITE_DEMO_STARTUP_PASS;
-    const investorUser = import.meta.env.VITE_DEMO_INVESTOR_USER;
-    const investorPass = import.meta.env.VITE_DEMO_INVESTORS_PASS;
-
-    if (data.userName === adminUser && data.password === adminPass) {
-      navigate("/admin");
-    } else if (data.userName === startupUser && data.password === startupPass) {
-      navigate("/startup");
-    } else if (
-      data.userName === investorUser &&
-      data.password === investorPass
-    ) {
-      navigate("/investor");
-    } else {
-      setError("root", {
-        type: "manual",
-        message: "Invalid username or password.",
-      });
-    }
+  const onSignUp = (data) => {
+    // TODO: backend and DB for users
+    navigate("/sign-up/submit");
+    console.log(data);
   };
 
   return (
     <div className="min-h-dvh flex flex-col items-center justify-center bg-neutral-950 p-4 font-sans text-neutral-100">
       <form
-        onSubmit={handleSubmit(onSignIn)}
+        onSubmit={handleSubmit(onSignUp)}
         className="flex flex-col gap-4 bg-neutral p-6 sm:p-8 w-full max-w-112.5 rounded-2xl shadow-lg"
       >
+        {/* NAME FILED */}
+        <h1 className="text-3xl font-bold mt-4 mx-auto lg:text-4xl">
+          Create an Account
+        </h1>
+        <p className="text-neutral-400 text-base mb-4.5 mx-auto lg:text-lg max-w-2xl ">
+          Join the sovereign gallery of investments.
+        </p>
+        <div className="flex flex-col gap-1.5">
+          <label className="font-semibold text-sm">Full Name</label>
+          <div className="flex items-center h-12 px-3 border-[1.5px] border-neutral-800 rounded-xl transition-colors duration-200 focus-within:border-tertiary-500">
+            <User className="w-5 h-5 text-neutral-500" />
+            <input
+              placeholder="Enter your Full Name"
+              className="ml-2.5 w-full h-full bg-transparent outline-none placeholder:text-neutral-500 text-sm"
+              {...register("fullName")}
+            />
+          </div>
+          <p className="text-error text-sm">{errors.fullName?.message}</p>
+        </div>
+
+        {/* EMAIL FILED */}
+        <div className="flex flex-col gap-1.5">
+          <label className="font-semibold text-sm">Email</label>
+          <div className="flex items-center h-12 px-3 border-[1.5px] border-neutral-800 rounded-xl transition-colors duration-200 focus-within:border-tertiary-500">
+            <AtSign className="w-5 h-5 text-neutral-500" />
+            <input
+              placeholder="Enter your Full Name"
+              className="ml-2.5 w-full h-full bg-transparent outline-none placeholder:text-neutral-500 text-sm"
+              {...register("email")}
+            />
+          </div>
+          <p className="text-error text-sm">{errors.email?.message}</p>
+        </div>
+
         {/* USER NAME FILED */}
         <div className="flex flex-col gap-1.5">
-          <h1 className="text-3xl font-bold mt-4 mb-7 mx-auto lg:text-4xl">
-            Welcome Back
-          </h1>
           <label className="font-semibold text-sm">User Name</label>
           <div className="flex items-center h-12 px-3 border-[1.5px] border-neutral-800 rounded-xl transition-colors duration-200 focus-within:border-tertiary-500">
             <User className="w-5 h-5 text-neutral-500" />
@@ -80,59 +114,66 @@ const SignInPage = () => {
 
         {/* PASSWORD FILIED */}
         <div className="flex flex-col gap-1.5">
-          <label className="font-semibold text-sm">Password</label>
-          <div className="flex items-center h-12 px-3 border-[1.5px] border-neutral-800 rounded-xl transition-colors duration-200 focus-within:border-tertiary-500">
-            <Lock className="w-5 h-5 text-neutral-500" />
-            <input
-              placeholder="Enter your Password"
-              className="ml-2.5 w-full h-full bg-transparent outline-none placeholder:text-neutral-500 text-sm"
-              type="password"
-              {...register("password")}
-            />
+          <div>
+            <label className="font-semibold text-sm">Password</label>
+            <div className="flex items-center h-12 px-3 border-[1.5px] border-neutral-800 rounded-xl transition-colors duration-200 focus-within:border-tertiary-500">
+              <Lock className="w-5 h-5 text-neutral-500" />
+              <input
+                placeholder="Enter your Password"
+                className="ml-2.5 w-full h-full bg-transparent outline-none placeholder:text-neutral-500 text-sm"
+                type="password"
+                {...register("password")}
+              />
+            </div>
           </div>
           <p className="text-error text-sm">{errors.password?.message}</p>
         </div>
 
-        {/* REMEMBER ME + TODO: FORGET PASSWORD */}
-        <div className="flex flex-row items-center justify-between mt-1">
-          <div className="flex items-center gap-2">
+        {/* CONFIRM PASSWORD FILIED */}
+        <div className="flex flex-col gap-1.5">
+          <label className="font-semibold text-sm">Confirm Password</label>
+          <div className="flex items-center h-12 px-3 border-[1.5px] border-neutral-800 rounded-xl transition-colors duration-200 focus-within:border-tertiary-500">
+            <Lock className="w-5 h-5 text-neutral-500" />
             <input
-              type="checkbox"
-              id="remember"
-              className="w-4 h-4 accent-tertiary-500 cursor-pointer"
+              placeholder="Confirm your Password"
+              className="ml-2.5 w-full h-full bg-transparent outline-none placeholder:text-neutral-500 text-sm"
+              type="password"
+              {...register("confirmPassword")}
             />
-            <label htmlFor="remember" className="text-sm cursor-pointer">
-              Remember me
-            </label>
           </div>
-          <span className="text-sm text-tertiary-500 font-medium cursor-pointer hover:underline transition-all">
-            Forgot password?
-          </span>
+          <p className="text-error text-sm">
+            {errors.confirmPassword?.message}
+          </p>
         </div>
 
-        {errors.root && (
-          <div className=" text-error text-sm rounded-lg text-center font-medium -mb-3">
-            {errors.root.message}
-          </div>
-        )}
-
-        {/* SIGN IN */}
-        <button
-          type="submit"
-          className="mt-2 h-12 w-full bg-neutral-100 text-neutral font-medium text-[15px] rounded-xl hover:bg-neutral-200 transition-colors duration-200"
-        >
-          Sign In
-        </button>
+        {/* TERM & PLICIES */}
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="remember"
+            className="w-4 h-4 accent-tertiary-500 cursor-pointer"
+            {...register("termsAndPolicies")}
+          />
+          <label htmlFor="remember" className="text-sm cursor-pointer">
+            I accept ther terms of use and Privacy Policy
+          </label>
+        </div>
+        <p className="text-error text-sm">{errors.termsAndPolicies?.message}</p>
 
         {/* SIGN UP */}
+        <button
+          type="submit"
+          className="mt-1 h-12 w-full bg-neutral-100 text-neutral font-medium text-[15px] rounded-xl hover:bg-neutral-200 transition-colors duration-200"
+        >
+          Sign UP
+        </button>
+
+        {/* SIGN IN */}
         <p className="text-center text-sm text-neutral-400 my-1">
-          Don't have an account?
-          <button
-            onClick={() => navigate("/sign-up")}
-            className="text-tertiary-500 font-medium cursor-pointer hover:underline ml-1"
-          >
-            Sign Up
-          </button>
+          You have an account?
+          <span className="text-tertiary-500 font-medium cursor-pointer hover:underline ml-1">
+            Sign In
+          </span>
         </p>
 
         {/* EXTRA FEATURE: ADD SOCIAL MEDIA LOGIN OPTIONS */}
@@ -184,4 +225,4 @@ const SignInPage = () => {
   );
 };
 
-export default SignInPage;
+export default SignUpPage;
