@@ -7,7 +7,7 @@ import ProgressBar from "../components/ProgressBar";
 export default function SubmitProjectInvestment() {
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header title={"Startup Dashboard"} role={"startup"} />
+      <Header title={"Startup Dashboard"} role={"investor"} />
       <ResponsiveContainer>
         <div className="flex flex-col rounded-2xl shadow-sm bg-neutral p-6 max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
           {/* TODO: loading icon and animaion */}

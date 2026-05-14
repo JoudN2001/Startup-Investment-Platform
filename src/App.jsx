@@ -78,7 +78,6 @@ function App() {
         </Route>
         {/* ===== ADMIN PAGES ===== */}
 
-        {}
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
         <Route path="/sign-up/submit" element={<SubmitNewAccount />} />

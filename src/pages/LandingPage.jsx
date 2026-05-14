@@ -1,6 +1,6 @@
 // COMPONENTS
 import ResponsiveContainer from "../components/ResponsiveContainer";
-import SectionTiltle from "../components/SectionTiltle";
+import SectionTitle from "../components/SectionTitle";
 import FeatureCard from "../components/FeatureCard";
 import ProjectCard from "../components/ProjectCard";
 
@@ -159,7 +159,7 @@ export default function LandingPage() {
         </div>
 
         {/* FEATURES CARDS */}
-        <SectionTiltle
+        <SectionTitle
           title="The Allocation Process."
           description="A streamlined, secure pathway from discovery to liquidity."
         />
@@ -184,7 +184,7 @@ export default function LandingPage() {
         {/* ===== FEATURES CARDS ===== */}
 
         {/* PROJECTS EXAMPLE */}
-        <SectionTiltle
+        <SectionTitle
           title="Active Exhibitions."
           description="Currently open for capital allocation."
         />

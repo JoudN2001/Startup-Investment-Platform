@@ -1,4 +1,4 @@
-const SectionTiltle = ({ title, description }) => {
+const SectionTitle = ({ title, description }) => {
   return (
     <div className="mb-3.5">
       <h1 className="text-3xl font-semibold text-primary my-2 lg:text-3xl">
@@ -11,4 +11,4 @@ const SectionTiltle = ({ title, description }) => {
   );
 };
 
-export default SectionTiltle;
+export default SectionTitle;

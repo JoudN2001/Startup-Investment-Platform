@@ -21,7 +21,7 @@ import { useProjects } from "../contexts/ProjectsContext";
 import { TextAlignStart, ArrowRight } from "lucide-react";
 
 // REACT
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 // CHECK ERROR ON LOCAL STORAGE
 import { saveProjectsToStorage } from "../utils/storage";
@@ -35,18 +35,6 @@ import { useForm } from "react-hook-form";
 
 // EXTERNAL LIBRARYS
 import { v4 as uuidv4 } from "uuid";
-
-const currencyFormatter = new Intl.NumberFormat("en", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
-
-const dateFormatter = new Intl.DateTimeFormat("en-GB", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-});
 
 const ProjectDetails = ({ role }) => {
   const { projectId } = useParams();
@@ -102,42 +90,53 @@ const ProjectDetails = ({ role }) => {
   };
 
   // FORMATED DATA
-  const getFormattedData = () => {
-    if (!selectedProject) {
-      return {
-        formattedGoal: "",
-        formattedMinInvest: "",
-        fundPercent: false,
-        lastUpdate: "",
-      };
-    }
-
-    const goal = currencyFormatter.format(Number(selectedProject.goal));
-    const minInvest = currencyFormatter.format(
-      Number(selectedProject.minInvest),
-    );
-
-    const percent =
-      selectedProject.currentRaised !== 0
-        ? (Number(selectedProject.currentRaised) /
-            Number(selectedProject.goal)) *
-          100
-        : false;
-
-    const updated = selectedProject.updatedAt
-      ? dateFormatter.format(new Date(selectedProject.updatedAt))
-      : "Not updated yet";
-
-    return {
-      formattedGoal: goal,
-      formattedMinInvest: minInvest,
-      fundPercent: percent,
-      lastUpdate: updated,
-    };
-  };
-
   const { formattedGoal, formattedMinInvest, fundPercent, lastUpdate } =
-    getFormattedData();
+    useMemo(() => {
+      if (!selectedProject) {
+        return {
+          formattedGoal: "",
+          formattedMinInvest: "",
+          fundPercent: false,
+          lastUpdate: "",
+        };
+      }
+
+      const goal = new Intl.NumberFormat("en", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0,
+      }).format(Number(selectedProject.goal));
+
+      const minInvest = new Intl.NumberFormat("en", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0,
+      }).format(Number(selectedProject.minInvest));
+
+      const percent =
+        selectedProject.currentRaised !== 0
+          ? Math.round(
+              (Number(selectedProject.currentRaised) /
+                Number(selectedProject.goal)) *
+                100,
+            )
+          : false;
+
+      const updated = selectedProject.updatedAt
+        ? new Intl.DateTimeFormat("en-GB", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }).format(new Date(selectedProject.updatedAt))
+        : "Not updated yet";
+
+      return {
+        formattedGoal: goal,
+        formattedMinInvest: minInvest,
+        fundPercent: percent,
+        lastUpdate: updated,
+      };
+    }, [selectedProject]);
 
   // HANDLE FORM EVENTS
   const handleDecision = (newStatus) => {

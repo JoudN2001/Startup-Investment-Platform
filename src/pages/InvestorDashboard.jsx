@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import { useProjects } from "../contexts/ProjectsContext";
 import { useMemo } from "react";
 
-export default function StartupDashboard() {
+export default function InvestorDashboard() {
   const { projects } = useProjects();
   const projectsCards = projects
     .filter((p) => p.status === "published")
