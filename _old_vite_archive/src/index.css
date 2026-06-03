@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+@theme {
+  /* SECONDARY FONT */
+  --font-secondary: "Manrope", sans-serif;
+
+  /* PRIMARY FONT */
+  --font-sans: "Inter", sans-serif;
+
+  /* PRIMARY COLORS GRADES */
+  --color-primary: #0f172a;
+  --color-primary-100: #131b2e;
+  --color-primary-200: #283044;
+  --color-primary-300: #3f465c;
+  --color-primary-400: #565e74;
+  --color-primary-500: #6f778e;
+  --color-primary-600: #8990a8;
+  --color-primary-700: #a3abc4;
+  --color-primary-800: #bec6e0;
+  --color-primary-900: #dae2fd;
+  --color-primary-950: #eef0ff;
+
+  /* SECONDARY COLORS GRADES */
+  --color-secondary: #334155;
+  --color-secondary-100: #0d1c2f;
+  --color-secondary-200: #233144;
+  --color-secondary-300: #3a485c;
+  --color-secondary-400: #515f74;
+  --color-secondary-500: #6a788e;
+  --color-secondary-600: #8392a9;
+  --color-secondary-700: #9eacc4;
+  --color-secondary-800: #b9c7e0;
+  --color-secondary-900: #d5e3fd;
+  --color-secondary-950: #ebf1ff;
+
+  /* TERTIARY COLORS GRADES */
+  --color-tertiary: #2563eb;
+  --color-tertiary-100: #00174b;
+  --color-tertiary-200: #002a78;
+  --color-tertiary-300: #003ea8;
+  --color-tertiary-400: #0053db;
+  --color-tertiary-500: #346ef6;
+  --color-tertiary-600: #618bff;
+  --color-tertiary-700: #8ca8ff;
+  --color-tertiary-800: #b4c5ff;
+  --color-tertiary-900: #dbe1ff;
+  --color-tertiary-950: #eef0ff;
+
+  /* NEUTRAL COLORS GRADES */
+  --color-neutral: #f8fafc;
+  --color-neutral-100: #191c1e;
+  --color-neutral-200: #2d3133;
+  --color-neutral-300: #444749;
+  --color-neutral-400: #5c5f61;
+  --color-neutral-500: #747779;
+  --color-neutral-600: #8e9193;
+  --color-neutral-700: #a9abad;
+  --color-neutral-800: #c4c7c9;
+  --color-neutral-900: #e0e3e5;
+  --color-neutral-950: #eff1f3;
+
+  /* STATUS & SEMANTIC COLORS */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-error-bg: #fef2f2;
+}
+
+/* CUSTOM fonts */
+
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/Manrope/Manrope-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/Manrope/Manrope-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/Manrope/Manrope-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/Manrope/Manrope-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/Manrope/Manrope-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/Manrope/Manrope-Light.ttf") format("truetype");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/Manrope/Manrope-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+}
+
+/* SECONDARY FONT */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter/Inter-Black.ttf") format("truetype");
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter/Inter-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter/Inter-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter/Inter-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter/Inter-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter/Inter-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter/Inter-Light.ttf") format("truetype");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter/Inter-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter/Inter-Thin.ttf") format("truetype");
+  font-weight: 100;
+}
+
+/* === CUSTOM fonts === */
