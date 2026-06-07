@@ -1,6 +1,6 @@
 // COMPONENTS
 import ProgressBar from "./ProgressBar";
-import Link from "next/link"
+import Link from 'next/link'
 
 // ICONS
 import { ArrowRight } from "lucide-react";
@@ -12,7 +12,7 @@ import { UserRole } from "@/types/userRole";
 // PROPS TYPES
 interface ProjectCardProps {
   projectId: string;
-  thumbnail: string;
+  thumbnail?: string;
   status: string;
   title: string;
   description: string;

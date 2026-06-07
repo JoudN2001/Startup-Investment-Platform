@@ -1,11 +1,9 @@
 // COMPONENTS
 import ResponsiveContainer from "@/components/layout/ResponsiveContainer";
 import FeatureCard from "@/components/ui/FeatureCard";
-import ProjectCard from "@/components/ui/ProjectCard";
 import SectionTitle from "@/components/ui/SectionTitle";
-
-// Context
-import { useProjects } from "@/contexts/ProjectsContext";
+import PublishedProjects from "@/components/ui/PublishedProjects";
+import LinkButton from "@/components/ui/LinkButton";
 
 // ICONS
 import { ArrowRight, Compass, Lock, ChartNoAxesCombined } from "lucide-react";
@@ -45,45 +43,18 @@ const companies = [
 ];
 
 export default function Home() {
-  const navigate = useNavigate();
   const year = new Date().getFullYear();
-  const { projects } = useProjects();
-  const handelClick = () => navigate("/sign-in");
-  const projectsCards = projects
-    .filter((p) => p.status === "published")
-    .map((p) => {
-      const formattedGoal = new Intl.NumberFormat("en", {
-        style: "currency",
-        currency: "USD",
-        maximumFractionDigits: 0,
-      }).format(Number(p.goal));
-      const fundPercent =
-        Math.round((Number(p.currentRaised) / Number(p.goal)) * 100) || 0;
-      return (
-        <ProjectCard
-          key={p.id}
-          projectId={p.id}
-          title={p.title}
-          description={p.description}
-          status={p.status}
-          thumbnail={p.thumbnailUrl}
-          goal={formattedGoal}
-          funded={fundPercent}
-          role={"visitor"}
-        />
-      );
-    });
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
       {/* HEADER */}
       <header className="fixed flex justify-between items-center gap-2 px-6 md:px-10 lg:px-20 top-0 py-5 bg-neutral/80 backdrop-blur-md w-full shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
         <h1 className="truncate font-bold text-2xl">Investment Platform</h1>
-        <button
-          onClick={handelClick}
+        <LinkButton
+          href = "/sign-in"
           className="p-3 max-w-1/3 bg-primary text-neutral font-medium text-[15px] rounded-xl cursor-pointer hover:bg-primary-100 transition-colors duration-200"
         >
           Sign In
-        </button>
+        </LinkButton>
       </header>
       {/* ===== HEADER ===== */}
 
@@ -102,28 +73,28 @@ export default function Home() {
         </div>
         {/* ===== OVERVIEW ===== */}
 
-        {/* ACTION BUTTONS */}
+        {/* ACTION LinkButtonS */}
         <div className="flex flex-col md:grid md:grid-cols-2 md:gap-5 md:my-8 md:items-center">
-          <button
-            onClick={handelClick}
+          <LinkButton
+            href = "/sign-in"
             className="mx-auto w-full mt-2.5 mb-2.5 md:my-0 cursor-pointer bg-primary text-neutral rounded-xl p-4 hover:bg-primary-100 active:bg-secondary-200 transition-colors"
           >
             <span className="font-bold lg:text-lg flex justify-center gap-2.5 items-center">
               Get Started
               <ArrowRight className="w-6 h-6 stroke-3" />
             </span>
-          </button>
+          </LinkButton>
 
-          <button
-            onClick={handelClick}
+          <LinkButton
+            href = "/sign-in"
             className="mx-auto w-full mt-2.5 mb-10  md:my-0 cursor-pointer bg-neutral text-primary rounded-xl p-4 hover:bg-neutral-50 active:bg-neutral-900 transition-colors"
           >
             <span className="font-bold lg:text-lg flex justify-center gap-2.5 items-center">
               Explore Projects
             </span>
-          </button>
+          </LinkButton>
         </div>
-        {/* ===== ACTION BUTTONS ====== */}
+        {/* ===== ACTION LinkButtonS ====== */}
 
         <div className="flex flex-col md:grid md:grid-cols-2 md:gap-12 items-center">
           <div className="relative w-full aspect-square md:aspect-square rounded-xl overflow-hidden bg-surface-container-lowest ghost-border mb-5 shadow-[0px_20px_40px_rgba(12,20,39,0.05)]">
@@ -185,18 +156,16 @@ export default function Home() {
           title="Active Exhibitions."
           description="Currently open for capital allocation."
         />
-        <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-5 md:mt-8 ">
-          {projectsCards}
-        </div>
-        <button
-          onClick={handelClick}
+        <PublishedProjects />
+        <LinkButton
+          href = "/sign-in"
           className="w-full my-10 cursor-pointer bg-neutral text-primary rounded-xl p-4 hover:bg-neutral-50 active:bg-neutral-900 transition-colors"
         >
           <span className="font-bold lg:text-lg flex justify-center gap-2.5 items-center">
             View All Exhibitions
             <ArrowRight className="w-6 h-6 stroke-3" />
           </span>
-        </button>
+        </LinkButton>
         {/* ===== PROJECTS EXAMPLE ===== */}
       </ResponsiveContainer>
       {/* ====== MAIN CONTENT ===== */}
