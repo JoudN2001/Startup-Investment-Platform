@@ -1,6 +1,6 @@
 // COMPONENTS
 import ProgressBar from "./ProgressBar";
-import Link from 'next/link'
+import LinkButton from "./LinkButton";
 
 // ICONS
 import { ArrowRight } from "lucide-react";
@@ -8,37 +8,36 @@ import { ArrowRight } from "lucide-react";
 // TYPES
 import { UserRole } from "@/types/userRole";
 
-
 // PROPS TYPES
 interface ProjectCardProps {
   projectId: string;
-  thumbnail?: string;
+  thumbnailUrl?: string;
   status: string;
   title: string;
   description: string;
-  goal: string;
-  funded: number;
+  formattedGoal: string;
+  fundedPercentage: number;
   role: UserRole;
 }
 
 export default function ProjectCard({
   projectId,
-  thumbnail,
-  status = "published",
-  title = "Architecture Office",
-  description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit alias illo dolorem.",
-  goal = "$1,200,000",
-  funded = 45,
+  thumbnailUrl,
+  status,
+  title,
+  description,
+  formattedGoal,
+  fundedPercentage,
   role,
 }: ProjectCardProps) {
   return (
     <div className={"bg-neutral rounded-2xl py-3 px-6 mt-6 md:mt-0 shadow-xs"}>
       {/* IMAGE & STATUS */}
-      {thumbnail && (
+      {thumbnailUrl && (
         <div className={"relative w-full h-48 mb-4"}>
           <img
             className={"w-full h-full object-cover rounded-xl"}
-            src={thumbnail}
+            src={thumbnailUrl}
             alt="Project Thumbnail"
           />
           <span className="absolute top-3 right-3 bg-neutral-900/60 text-neutral-400 backdrop-blur-xl py-1 px-2 text-xs font-semibold rounded-full">
@@ -52,7 +51,7 @@ export default function ProjectCard({
         <h1 className={"text-3xl font-bold my-2 max-w-2/3 truncate"}>
           {title}
         </h1>
-        {!thumbnail && (
+        {!thumbnailUrl && (
           <span className="bg-neutral-900/60 text-neutral-400 backdrop-blur-xl py-1 px-2 text-xs font-semibold rounded-full">
             {status.toUpperCase()}
           </span>
@@ -61,7 +60,10 @@ export default function ProjectCard({
       <p className={"text-neutral-400 font-medium text-base/6 truncate"}>
         {description}
       </p>
-      <ProgressBar percentageBar={funded} percentage={goal} />
+      <ProgressBar
+        percentageBar={fundedPercentage}
+        percentage={formattedGoal}
+      />
       <hr className={"border-tertiary-900/75 border-x rounded-4xl my-1 "} />
       <div
         className={
@@ -69,9 +71,9 @@ export default function ProjectCard({
         }
       >
         <span className={"text-neutral-500 font-semibold text-sm"}>
-          {funded}% Fundend
+          {fundedPercentage}% Fundend
         </span>
-        <Link
+        <LinkButton
           href={
             role === "admin"
               ? `/admin/approvals/project-details/${projectId}`
@@ -87,7 +89,7 @@ export default function ProjectCard({
         >
           View Details
           <ArrowRight className={"w-4 h-4 stroke-3"} />
-        </Link>
+        </LinkButton>
       </div>
       {/* ===== TITEL & DESCREOPTION + PROGRESS BAR & DETAILS ===== */}
     </div>

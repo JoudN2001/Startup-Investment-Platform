@@ -1,0 +1,17 @@
+interface SummaryCardProps {
+  title: string;
+  value: number;
+}
+export default function SummaryCard({
+  title = "title",
+  value = 0,
+}: SummaryCardProps) {
+  return (
+    <div className="bg-neutral-900/50 rounded-2xl py-2 sm:py-3 px-5 sm:px-7 mt-6 lg:mt-0">
+      <span className="text-neutral-400 font-bold text-[10px] sm:text-xs tracking-widest font-secondary">
+        {title.toUpperCase()}
+      </span>
+      <h1 className={`text-3xl font-bold my-2 `}>{value}</h1>
+    </div>
+  );
+}
