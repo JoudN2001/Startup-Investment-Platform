@@ -47,14 +47,23 @@ export default function Header({ title, role }: HeaderProps) {
                   : "/"
           }
         >
-          <span className={"text-xl xl:text-2xl font-bold select-none cursor-pointer"}>{title}</span>
+          <span
+            className={
+              "text-xl xl:text-2xl font-bold select-none cursor-pointer"
+            }
+          >
+            {title}
+          </span>
         </LinkButton>
       </div>
       {/* ===== PROFILE & TITLE ===== */}
       {/* NAVIGATION DESCKTOP */}
       <nav className="hidden md:flex space-x-4 md:space-x-6 lg:space-x-8 xl:space-x-12 text-neutral-500 font-semibold">
         {navLinks.map((link) => {
-          let isRoot = link.path === "/admin" || link.path === "/startup";
+          let isRoot =
+            link.path === "/admin" ||
+            link.path === "/startup" ||
+            link.path === "/investor";
           let isActive = isRoot
             ? pathname === link.path
             : pathname.startsWith(link.path);

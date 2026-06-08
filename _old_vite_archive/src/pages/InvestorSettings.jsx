@@ -6,7 +6,7 @@ import ResponsiveContainer from "../components/ResponsiveContainer";
 export default function InvestorSettings() {
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header title={"Startup Dashboard"} role={"investor"}/>
+      <Header title={"Investor Dashboard"} role={"investor"}/>
       {/* MAIN CONTENT */}
       <ResponsiveContainer></ResponsiveContainer>
       {/* ====== MAIN CONTENT ===== */}
