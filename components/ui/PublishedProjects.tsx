@@ -25,9 +25,9 @@ export default function PublishedProjects() {
           title={p.title}
           description={p.description}
           status={p.status}
-          thumbnail={p.thumbnailUrl}
-          goal={formattedGoal}
-          funded={fundPercent}
+          thumbnailUrl={p.thumbnailUrl}
+          formattedGoal={formattedGoal}
+          fundedPercentage={fundPercent}
           role={"visitor"}
         />
       );

@@ -6,11 +6,11 @@ import { forwardRef, TextareaHTMLAttributes } from "react";
 
 // TYPES
 interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement>{
-  title: string;
-  placeholder: string;
+  title?: string;
+  placeholder?: string;
   hint?: string;
   error?: { message?: string };
-  bgColor: string;
+  bgColor?: string;
 }
 
 const TextArea = forwardRef <HTMLTextAreaElement, TextAreaProps>(

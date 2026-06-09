@@ -1,6 +1,6 @@
 interface SummaryCardProps {
   title: string;
-  value: number;
+  value: number | string;
 }
 export default function SummaryCard({
   title = "title",

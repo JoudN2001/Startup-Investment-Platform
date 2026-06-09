@@ -18,16 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`h-full antialiased`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        <div className={"bg-neutral-950 w-full min-h-dvh"}>
-          <Header title={"Admin Dashboard"} role={"admin"} />
-          <DesktopAdminHeader />
-          <DesktopNavBar title="investment portal" role="admin" />
-          <ResponsiveContainer>{children}</ResponsiveContainer>
-          <MobileNavBar role="admin" />
-        </div>
-      </body>
-    </html>
+    <div className={"bg-neutral-950 w-full min-h-dvh"}>
+      <Header title={"Admin Dashboard"} role={"admin"} />
+      <DesktopAdminHeader />
+      <DesktopNavBar title="investment portal" role="admin" />
+      <ResponsiveContainer>{children}</ResponsiveContainer>
+      <MobileNavBar role="admin" />
+    </div>
   );
 }

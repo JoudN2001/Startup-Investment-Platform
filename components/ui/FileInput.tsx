@@ -1,7 +1,18 @@
-// REACT
-import { forwardRef } from "react";
+"use client"
 
-const FileInput = forwardRef(
+// REACT
+import { forwardRef, InputHTMLAttributes } from "react";
+
+interface FileInputProps extends InputHTMLAttributes<HTMLInputElement> {
+  title?: string;
+  hint?: string;
+  supportedFiles?: string;
+  hasFile: boolean;
+  onClear: () => void;
+  error: any;
+}
+
+const FileInput = forwardRef<HTMLInputElement, FileInputProps>(
   (
     {
       title = "upload cover image",
@@ -26,7 +37,7 @@ const FileInput = forwardRef(
           >
             {title.toUpperCase()}
           </label>
-          
+
           <div className="flex items-center gap-3">
             {hasFile && onClear && (
               <button
@@ -40,7 +51,7 @@ const FileInput = forwardRef(
             <span className="block text-xs lg:text-sm text-neutral-500">
               {hint.toUpperCase()}
             </span>
-        </div>
+          </div>
         </div>
         {/* ===== FILE LABEL ===== */}
         {/* FILE INPUT */}

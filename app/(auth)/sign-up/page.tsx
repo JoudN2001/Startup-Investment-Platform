@@ -13,6 +13,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // FORM LIBRARY
 import { useForm } from "react-hook-form";
 
+// COMPONENTS
+import LinkButton from "@/components/ui/LinkButton";
+
 export default function SignUpPage() {
   // USER NAME & PASSWORD SCHEMA
   const signUpSchema = z
@@ -181,12 +184,15 @@ export default function SignUpPage() {
         </button>
 
         {/* SIGN IN */}
+        <LinkButton
+        href="/sign-in">
         <p className="text-center text-sm text-neutral-400 my-1">
           You have an account?
           <span className="text-tertiary-500 font-medium cursor-pointer hover:underline ml-1">
             Sign In
           </span>
         </p>
+        </LinkButton>
 
         {/* EXTRA FEATURE: ADD SOCIAL MEDIA LOGIN OPTIONS */}
         {/* <div className="flex items-center gap-3 my-2">

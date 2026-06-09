@@ -1,5 +1,5 @@
 // TODO: SERVER SIDE RENDERING WHEN CONNECT WITH DATABASE & PRISMA
-"use client"
+"use client";
 
 // COMPONENTS
 import ProjectCard from "@/components/ui/ProjectCard";
@@ -112,11 +112,7 @@ export default function InvestorDashboard() {
           <h1 className={"text-4xl font-bold my-2 lg:text-5xl"}>
             Naya Portfolio
           </h1>
-          <p
-            className={
-              "text-neutral-400 font-semibold text-base lg:text-lg max-w-xl"
-            }
-          >
+          <p className="text-neutral-400 font-semibold text-base lg:text-lg max-w-xl">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit
             alias illo dolorem, voluptatem asperiores obcaecati rerum voluptas
             dolores similique iste reprehenderit saepe, quasi voluptatibus,

@@ -6,7 +6,7 @@ import DetailsCard from "@/components/ui/DetailsCard";
 import FileCard from "@/components/ui/FileCard";
 import LastAction from "@/components/ui/LastAction";
 import AuditDecision from "@/components/ui/AuditDecision";
-import InputFiled from "@/components/ui/InputFiled";
+import InputField from "@/components/ui/InputField";
 
 // NEXT ROUTERS
 import { useParams, useRouter, notFound } from "next/navigation";
@@ -244,7 +244,7 @@ export default function ProjectDetailsView({ role }: { role: string }) {
             onSubmit={handleSubmit(onSubmit)}
             className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mb-35"
           >
-            <InputFiled
+            <InputField
               type="number"
               title="minimum investment ($)"
               placeholder={formattedMinInvest}
