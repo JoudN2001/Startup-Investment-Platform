@@ -57,14 +57,7 @@ export default function SignUpPage() {
   const router = useRouter();
 
   // SIGN UP DATA TYPES
-  interface signUpObj {
-    fullName: string;
-    email: string;
-    userName: string;
-    password: string;
-    confirmPassword: string;
-    termsAndPolicies?: boolean;
-  }
+  type signUpObj = z.infer<typeof signUpSchema>;
 
   // HANDLE SIGN IN
   const onSignUp = (data: signUpObj) => {
@@ -184,14 +177,13 @@ export default function SignUpPage() {
         </button>
 
         {/* SIGN IN */}
-        <LinkButton
-        href="/sign-in">
-        <p className="text-center text-sm text-neutral-400 my-1">
-          You have an account?
-          <span className="text-tertiary-500 font-medium cursor-pointer hover:underline ml-1">
-            Sign In
-          </span>
-        </p>
+        <LinkButton href="/sign-in">
+          <p className="text-center text-sm text-neutral-400 my-1">
+            You have an account?
+            <span className="text-tertiary-500 font-medium cursor-pointer hover:underline ml-1">
+              Sign In
+            </span>
+          </p>
         </LinkButton>
 
         {/* EXTRA FEATURE: ADD SOCIAL MEDIA LOGIN OPTIONS */}

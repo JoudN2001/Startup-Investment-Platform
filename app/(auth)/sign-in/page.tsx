@@ -13,7 +13,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // FORM LIBRARY
 import { useForm } from "react-hook-form";
 
-
 export default function SignInPage() {
   // USER NAME & PASSWORD SCHEMA
   const signInSchema = z.object({
@@ -32,11 +31,7 @@ export default function SignInPage() {
   const router = useRouter();
 
   // SIGN IN DATA TYPES
-  interface signInObj {
-    userName: string;
-    password: string;
-    rememberMe?: boolean;
-  }
+  type signInObj = z.infer<typeof signInSchema>;
 
   const onSignIn = (data: signInObj) => {
     // DEMO USERS
