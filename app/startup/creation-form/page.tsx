@@ -1,5 +1,4 @@
-// TODO: SERVER SIDE RENDERING WHEN CONNECT WITH DATABASE & PRISMA
-"use client";
+// TODO: Fetch data server-side using Supabase SDK via DAL"use client";
 
 // COMPONENTS
 import InputFiled from "@/components/ui/InputField";
