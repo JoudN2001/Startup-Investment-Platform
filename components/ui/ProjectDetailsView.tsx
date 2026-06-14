@@ -1,4 +1,5 @@
-// TODO: Fetch data server-side using Supabase SDK via DAL"use client";
+// TODO: Fetch data server-side using Supabase SDK via DAL
+"use client";
 
 // COMPONENTS
 import DetailsCard from "@/components/ui/DetailsCard";

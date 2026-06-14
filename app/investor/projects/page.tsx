@@ -1,4 +1,6 @@
-// TODO: Fetch data server-side using Supabase SDK via DAL"use client"
+// TODO: Fetch data server-side using Supabase SDK via DAL
+
+"use client"
 
 // COMPONENTS
 import ProjectCard from "@/components/ui/ProjectCard";

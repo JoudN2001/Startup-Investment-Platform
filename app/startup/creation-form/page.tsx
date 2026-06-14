@@ -1,4 +1,6 @@
-// TODO: Fetch data server-side using Supabase SDK via DAL"use client";
+// TODO: Fetch data server-side using Supabase SDK via DAL
+
+"use client";
 
 // COMPONENTS
 import InputFiled from "@/components/ui/InputField";
