@@ -1,90 +1,77 @@
-// TODO: Fetch data server-side using Supabase SDK via DAL
-
-"use client"
-// COMPONENTS
 import HighlightedCard from "@/components/ui/HighlightedCard";
 import ProjectMiniCard from "@/components/ui/ProjectMiniCard";
 import SummaryCard from "@/components/ui/SummaryCard";
 import LinkButton from "@/components/ui/LinkButton";
 
-// CONTEXTS
-import { useProjects } from "@/contexts/ProjectsContext";
+import { fetchProjects } from "@/dal/projects";
 
-// REACT
-import { useMemo } from "react";
+// الدالة الآن async لتتمكن من استخدام await لجلب البيانات
+export default async function AdminDashboard() {
+  // جلب البيانات من قاعدة البيانات عبر الـ DAL
+  const projects = await fetchProjects();
 
-export default function AdminDashboard() {
-  const { projects } = useProjects();
+  // DYNAMIC DATA IN CARDS - حساب البيانات مباشرة دون استخدام useMemo
 
-  // DYNAMIC DATA IN CARDS
-  const totalPending = useMemo(() => {
-    return projects.filter((p) => p.status === "pending").length;
-  }, [projects]);
+  const totalPending = projects.filter((p) => p.status === "pending").length;
+  const totalApproved = projects.filter((p) => p.status === "published").length;
 
-  const totalApproved = useMemo(() => {
-    return projects.filter((p) => p.status === "published").length;
-  }, [projects]);
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
 
-  const { monthlyFundsRequested, fundsTrend } = useMemo(() => {
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
+  const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+  const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
 
-    const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-    const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+  let currentMonthTotal = 0;
+  let lastMonthTotal = 0;
 
-    let currentMonthTotal = 0;
-    let lastMonthTotal = 0;
+  // Loop through projects exactly ONCE
+  projects.forEach((p) => {
+    // يجب الانتباه أن أسماء الحقول يجب أن تطابق أسماءها في قاعدة البيانات
+    // مثلاً، إذا كان الحقل في DB هو 'created_at'، يجب تغييره هنا.
+    // افترضنا هنا أن الحقل يسمى 'created_at' في قاعدة بيانات Supabase.
+    if (!p.created_at) return;
+    const pDate = new Date(p.created_at);
+    const pMonth = pDate.getMonth();
+    const pYear = pDate.getFullYear();
 
-    // Loop through projects exactly ONCE
-    projects.forEach((p) => {
-      if (!p.createdAt) return;
-      const pDate = new Date(p.createdAt);
-      const pMonth = pDate.getMonth();
-      const pYear = pDate.getFullYear();
-
-      if (pMonth === currentMonth && pYear === currentYear) {
-        currentMonthTotal += p.goal;
-      } else if (pMonth === lastMonth && pYear === lastMonthYear) {
-        lastMonthTotal += p.goal;
-      }
-    });
-
-    // Calculate Trend
-    let trendString = "0.0% from last month";
-    if (lastMonthTotal === 0) {
-      trendString =
-        currentMonthTotal > 0
-          ? "+100.0% from last month"
-          : "0.0% from last month";
-    } else {
-      const percentageChange =
-        ((currentMonthTotal - lastMonthTotal) / lastMonthTotal) * 100;
-      const sign = percentageChange >= 0 ? "+" : "";
-      trendString = `${sign}${percentageChange.toFixed(1)}% from last month`;
+    // تأكد من تطابق اسم حقل الهدف (goal) مع قاعدة البيانات.
+    if (pMonth === currentMonth && pYear === currentYear) {
+      currentMonthTotal += Number(p.goal);
+    } else if (pMonth === lastMonth && pYear === lastMonthYear) {
+      lastMonthTotal += Number(p.goal);
     }
+  });
 
-    // Return both values with their correct names
-    return {
-      monthlyFundsRequested: currentMonthTotal,
-      fundsTrend: trendString,
-    };
-  }, [projects]);
+  // Calculate Trend
+  let trendString = "0.0% from last month";
+  if (lastMonthTotal === 0) {
+    trendString =
+      currentMonthTotal > 0
+        ? "+100.0% from last month"
+        : "0.0% from last month";
+  } else {
+    const percentageChange =
+      ((currentMonthTotal - lastMonthTotal) / lastMonthTotal) * 100;
+    const sign = percentageChange >= 0 ? "+" : "";
+    trendString = `${sign}${percentageChange.toFixed(1)}% from last month`;
+  }
 
-  const formattedFundsRequested = useMemo(() => {
-    return new Intl.NumberFormat("en", {
-      style: "currency",
-      currency: "USD",
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(monthlyFundsRequested);
-  }, [monthlyFundsRequested]);
+  const monthlyFundsRequested = currentMonthTotal;
+  const fundsTrend = trendString;
+
+  const formattedFundsRequested = new Intl.NumberFormat("en", {
+    style: "currency",
+    currency: "USD",
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(monthlyFundsRequested);
 
   return (
     <main className="lg:pl-72">
       {/* OVERVIEW */}
       <div className="lg:hidden">
-        <h1 className="text-4xl font-bold my-2 lg:text-5xl">Naya Portfolio</h1>
+        <h1 className="text-4xl font-bold my-2 lg:text-5xl">Portfolio</h1>
         <p className="text-neutral-400 font-semibold text-base lg:text-lg max-w-xl">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit alias
           illo dolorem.
@@ -120,12 +107,14 @@ export default function AdminDashboard() {
 
       {/* PROJECTS LIST MAX IS 6 */}
       <div className="flex flex-col gap-2 last:mb-36">
-        {projects.slice(0,6).map((p) => {
+        {projects.slice(0, 6).map((p) => {
           const formattedGoal = new Intl.NumberFormat("en", {
             style: "currency",
             currency: "USD",
             maximumFractionDigits: 0,
           }).format(Number(p.goal));
+          
+          // تأكد من تطابق اسم حقل currentRaised مع قاعدة البيانات
           const fundPercent =
             (Number(p.currentRaised) / Number(p.goal)) * 100 || 0;
           return (
@@ -134,7 +123,7 @@ export default function AdminDashboard() {
               projectId={p.id}
               title={p.title}
               status={p.status}
-              thumbnailUrl={p.thumbnailUrl}
+              thumbnailUrl={p.thumbnailUrl} // تأكد من الاسم في DB
               formattedGoal={formattedGoal}
               fundedPercentage={fundPercent}
             />
