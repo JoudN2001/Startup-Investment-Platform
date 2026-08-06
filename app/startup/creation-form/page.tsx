@@ -93,7 +93,7 @@ export default function CreateProjectForm() {
     control,
     resetField,
   } = useForm<CreateProjectFormValues>({
-    resolver: zodResolver(createProjectFormSchema),
+    resolver: zodResolver(createProjectFormSchema) as any,
   });
 
   const thumbnailFile = useWatch({ control, name: "thumbnail" });
