@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { createClient } from "@/utils/supabase/server";
 
 // COMPONENTS
 import Header from "@/components/layout/Header";
@@ -12,15 +14,34 @@ export const metadata: Metadata = {
   description: "Manage projects, users, and investments securely.",
 };
 
-export default function RootLayout({
+export default async function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const userId = cookieStore.get("userId")?.value;
+  const userRole = cookieStore.get("userRole")?.value || "admin";
+
+  let userName = "User";
+
+  if (userId) {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("users")
+      .select("name")
+      .eq("userId", userId)
+      .single();
+
+    if (data?.name) {
+      userName = data.name;
+    }
+  }
+
   return (
     <div className={"bg-neutral-950 w-full min-h-dvh"}>
-      <Header title={"Admin Dashboard"} role={"admin"} />
-      <DesktopAdminHeader />
+      <Header userName={userName} role={userRole} />
+      <DesktopAdminHeader userName={userName} />{" "}
       <DesktopNavBar title="investment portal" role="admin" />
       <ResponsiveContainer>{children}</ResponsiveContainer>
       <MobileNavBar role="admin" />
