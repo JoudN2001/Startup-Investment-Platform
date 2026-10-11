@@ -1,5 +1,3 @@
-// TODO: Fetch data server-side using Supabase SDK via DAL
-
 "use client";
 
 // COMPONENTS
@@ -11,12 +9,6 @@ import LinkButton from "@/components/ui/LinkButton";
 // LINK ROUTER
 import { useRouter } from "next/navigation";
 
-// CONTEXTS
-import { useProjects } from "@/contexts/ProjectsContext";
-
-// CHECK ERROR ON LOCAL STORAGE
-import { saveProjectsToStorage } from "@/utils/storage";
-
 // SCHEMA VALIDATION LIBRARY
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,11 +16,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // FORM LIBRARY
 import { useForm, useWatch } from "react-hook-form";
 
-// EXTERNAL LIBRARYS
-import { v4 as uuidv4 } from "uuid";
+// REACT
+import { useTransition } from "react";
 
-// TYPES
-import { Project } from "@/types/project";
+// SERVER ACTION
+import { submitProjectAction } from "@/app/actions/projectActions";
 
 // VALIDATION DATA FIELD CHECK
 const createProjectFormSchema = z
@@ -57,25 +49,27 @@ const createProjectFormSchema = z
         message: "Minimum investment is required and must be a valid number.",
       })
       .positive("Amount must be greater than zero!"),
+      
     thumbnail: z
       .any()
       .refine(
         (files) => !files || files.length === 0 || files[0]?.size <= 5242880,
-        "Max file size is 5MB.",
+        "Max file size is 5MB."
       )
       .refine(
         (files) =>
           !files ||
           files.length === 0 ||
           ["image/jpeg", "image/png", "image/webp"].includes(files[0]?.type),
-        "Only .jpg, .png and .webp formats are supported.",
+        "Only .jpg, .png and .webp formats are supported."
       )
       .optional(),
+      
     files: z
       .any()
       .refine(
         (files) => !files || files.length === 0 || files[0]?.size <= 26214400,
-        "Max file size is 25MB.",
+        "Max file size is 25MB."
       )
       .optional(),
   })
@@ -83,10 +77,14 @@ const createProjectFormSchema = z
     message: "Minimum investment must be strictly less than the funding goal.",
     path: ["minmumInvestement"],
   });
+
 type CreateProjectFormValues = z.infer<typeof createProjectFormSchema>;
+
 export default function CreateProjectForm() {
   const router = useRouter();
-  const { projects, setProjects } = useProjects();
+  
+  const [isPending, startTransition] = useTransition();
+
   // USEFORM HOOK WITH SECHEMA VALIDATION
   const {
     register,
@@ -94,8 +92,8 @@ export default function CreateProjectForm() {
     formState: { errors },
     control,
     resetField,
-  } = useForm({
-    resolver: zodResolver(createProjectFormSchema),
+  } = useForm<CreateProjectFormValues>({
+    resolver: zodResolver(createProjectFormSchema) as any,
   });
 
   const thumbnailFile = useWatch({ control, name: "thumbnail" });
@@ -105,54 +103,37 @@ export default function CreateProjectForm() {
 
   // HANDLE SUBMIT FORM
   const onSubmit = (data: CreateProjectFormValues) => {
-    // TODO: Files and thumbnail must be as link or create backend
-    const newProject: Project = {
-      id: uuidv4(),
-      title: data.title,
-      description: data.description,
-      status: "pending",
-      thumbnailUrl: "",
-      attachedFilesUrls: [],
-      goal: data.fundingGoal,
-      minInvest: data.minmumInvestement,
-      currentRaised: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: "",
-      adminFeedback: "",
-      investors: [],
-    };
-    const updatedProjects = [...projects, newProject];
-    const isSaved = saveProjectsToStorage(updatedProjects);
-    if (isSaved) {
-      setProjects(updatedProjects);
-      router.push("/startup/creation-form/submit");
-    }
+    startTransition(async () => {
+      try {
+        // TODO: برمجة رفع الملفات والصور لاحقاً باستخدام Supabase Storage
+        
+        await submitProjectAction(data);
+        
+        router.push("/startup/creation-form/submit");
+      } catch (error) {
+        console.error("Failed to submit project:", error);
+        alert("Something went wrong. Please try again.");
+      }
+    });
   };
 
   return (
     <>
       {/* TITLE & DESCREPTION */}
       <div className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
-        <span
-          className={
-            "text-neutral-700 font-medium text-xs lg:text-sm tracking-widest"
-          }
-        >
+        <span className="text-neutral-700 font-medium text-xs lg:text-sm tracking-widest">
           NEW VENTURE
         </span>
-        <h1 className={"text-4xl font-bold my-2 lg:text-5xl"}>
+        <h1 className="text-4xl font-bold my-2 lg:text-5xl">
           Project Details
         </h1>
-        <p
-          className={
-            "text-neutral-400 font-semibold text-base lg:text-lg max-w-xl"
-          }
-        >
+        <p className="text-neutral-400 font-semibold text-base lg:text-lg max-w-xl">
           Define your architectural capital project and set your investment
           parameters for institutional review.
         </p>
       </div>
       {/* ===== TITLE & DESCREPTION ===== */}
+      
       {/* FORM */}
       <form
         noValidate
@@ -198,18 +179,24 @@ export default function CreateProjectForm() {
           hasFile={hasDocuments}
           onClear={() => resetField("files")}
         />
+        
         {/* SUBMIT & CANCEL BUTTONS  */}
         <button
           type="submit"
-          className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mt-2.5 mb-2.5 bg-primary text-neutral rounded-xl p-4 active:bg-secondary-200"
+          disabled={isPending}
+          className={`max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mt-2.5 mb-2.5 text-neutral rounded-xl p-4 transition-colors ${
+            isPending ? "bg-neutral-600 cursor-not-allowed" : "bg-primary active:bg-secondary-200"
+          }`}
         >
-          <span className={"font-bold lg:text-lg"}>Submit for Approval</span>
+          <span className="font-bold lg:text-lg">
+            {isPending ? "Submitting..." : "Submit for Approval"}
+          </span>
         </button>
         <LinkButton
           href={"/startup"}
           className="flex justify-center max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl w-full mb-2.5 text-primary rounded-xl p-3"
         >
-          <span className={"font-bold lg:text-lg"}>Cancel</span>
+          <span className="font-bold lg:text-lg">Cancel</span>
         </LinkButton>
         {/* ===== SUBMIT & CANCEL BUTTONS  ===== */}
       </form>

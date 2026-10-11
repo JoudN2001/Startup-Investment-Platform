@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 // COMPONENTS
 import TextArea from "./TextArea";
@@ -18,6 +18,7 @@ interface AuditDecisionProps {
   selectedProject: Project;
   feedback: string;
   setFeedback: Dispatch<SetStateAction<string>>;
+  isPending?: boolean;
 }
 
 const AuditDecision = ({
@@ -26,6 +27,7 @@ const AuditDecision = ({
   selectedProject,
   feedback,
   setFeedback,
+  isPending,
 }: AuditDecisionProps) => {
   return (
     <div className="max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto w-full bg-neutral rounded-2xl py-2 sm:py-3 px-5 sm:px-7 mt-6 lg:mt-0 mb-5">
@@ -39,6 +41,7 @@ const AuditDecision = ({
             ? selectedProject.adminFeedback
             : "No feedback on your project "}
       </p>
+
       {role === "admin" && (
         <>
           <TextArea
@@ -52,29 +55,49 @@ const AuditDecision = ({
             }}
           />
           <div className="flex flex-col gap-3 mb-4">
+            {/* APPROVE BUTTON */}
             <button
               type="button"
+              disabled={isPending}
               onClick={() => handleDecision("published")}
-              className="flex items-center justify-center gap-2 text-neutral font-semibold bg-success py-2 mt-3 w-full rounded-lg"
+              className={`flex items-center justify-center gap-2 text-neutral font-semibold py-2 mt-3 w-full rounded-lg transition-colors ${
+                isPending
+                  ? "bg-success/50 cursor-not-allowed"
+                  : "bg-success active:bg-success/80"
+              }`}
             >
-              <Check />
-              Approve Project
+              <Check className={isPending ? "opacity-50" : ""} />
+              {isPending ? "Processing..." : "Approve Project"}
             </button>
+
             <div className="flex gap-2 justify-between w-full">
+              {/* REVISION BUTTON */}
               <button
                 type="button"
+                disabled={isPending}
                 onClick={() => handleDecision("pending")}
-                className="flex flex-1 items-center justify-center gap-2 text-error font-semibold bg-neutral border-warning border-2 py-2 px-2 rounded-lg"
+                className={`flex flex-1 items-center justify-center gap-2 font-semibold bg-neutral border-2 py-2 px-2 rounded-lg transition-colors ${
+                  isPending
+                    ? "text-error/50 border-warning/50 cursor-not-allowed"
+                    : "text-error border-warning active:bg-warning/10"
+                }`}
               >
-                <SquarePen />
+                <SquarePen className={isPending ? "opacity-50" : ""} />
                 Revision
               </button>
+
+              {/* REJECT BUTTON */}
               <button
                 type="button"
+                disabled={isPending}
                 onClick={() => handleDecision("rejected")}
-                className="flex flex-1 items-center justify-center gap-2 text-neutral font-semibold bg-error py-2 px-2 rounded-lg"
+                className={`flex flex-1 items-center justify-center gap-2 text-neutral font-semibold py-2 px-2 rounded-lg transition-colors ${
+                  isPending
+                    ? "bg-error/50 cursor-not-allowed"
+                    : "bg-error active:bg-error/80"
+                }`}
               >
-                <X />
+                <X className={isPending ? "opacity-50" : ""} />
                 Reject
               </button>
             </div>

@@ -20,8 +20,8 @@ export default function PublishedProjects() {
         Math.round((Number(p.currentRaised) / Number(p.goal)) * 100) || 0;
       return (
         <ProjectCard
-          key={p.id}
-          projectId={p.id}
+          key={p.projectId}
+          projectId={p.projectId}
           title={p.title}
           description={p.description}
           status={p.status}

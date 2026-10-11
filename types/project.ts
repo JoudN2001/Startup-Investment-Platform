@@ -12,7 +12,7 @@ export interface ProjectInvestor {
 }
 
 export interface Project {
-  id: string;
+  projectId: string;
   title: string;
   description: string;
   status: ProjectStatus;

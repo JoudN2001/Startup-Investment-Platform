@@ -1,4 +1,3 @@
-// TODO: Fetch data server-side using Supabase SDK via DAL
 "use client";
 
 // COMPONENTS
@@ -9,20 +8,16 @@ import AuditDecision from "@/components/ui/AuditDecision";
 import InputField from "@/components/ui/InputField";
 
 // NEXT ROUTERS
-import { useParams, useRouter, notFound } from "next/navigation";
-
-// CONTEXTS
-import { useProjects } from "@/contexts/ProjectsContext";
+import { useRouter } from "next/navigation";
 
 // ICONS
 import { TextAlignStart, ArrowRight } from "lucide-react";
 
 // REACT
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 
-// UTILS & TYPES
-import { saveProjectsToStorage } from "@/utils/storage";
-import { ProjectStatus } from "@/types/project";
+// TYPES
+import { ProjectStatus, Project } from "@/types/project";
 
 // SCHEMA VALIDATION LIBRARY
 import { z } from "zod";
@@ -31,19 +26,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // FORM LIBRARY
 import { useForm } from "react-hook-form";
 
-// EXTERNAL LIBRARYS
-import { v4 as uuidv4 } from "uuid";
+// SERVER ACTIONS
+import {
+  investInProjectAction,
+  updateProjectStatusAction,
+} from "@/app/actions/projectMutations";
 
-export default function ProjectDetailsView({ role }: { role: string }) {
-  const { projectId } = useParams();
-  const { projects, setProjects } = useProjects();
+interface ProjectDetailsViewProps {
+  project: Project;
+  role: string;
+}
+
+export default function ProjectDetailsView({ project, role }: ProjectDetailsViewProps) {
   const router = useRouter();
   const [feedback, setFeedback] = useState("");
-  const selectedProject = projects.find((p) => p.id === projectId);
-
-  if (!selectedProject) {
-    return notFound();
-  }
+  
+  const [isPending, startTransition] = useTransition();
 
   // VALIDATION DATA FIELD CHECK
   const createProjectFormSchema = z
@@ -55,7 +53,7 @@ export default function ProjectDetailsView({ role }: { role: string }) {
         .min(1, "Minimum investment is required.")
         .positive("Amount must be greater than zero!"),
     })
-    .refine((data) => data.minmumInvestement >= selectedProject.minInvest, {
+    .refine((data) => data.minmumInvestement >= project.minInvest, {
       message: "Your investment must be greater than the minimum investment",
       path: ["minmumInvestement"],
     });
@@ -69,75 +67,75 @@ export default function ProjectDetailsView({ role }: { role: string }) {
     resolver: zodResolver(createProjectFormSchema),
   });
 
-  // HANDLE SUBMIT FORM
+  // HANDLE SUBMIT FORM (INVESTMENT)
   const onSubmit = (data: any) => {
-    // TODO: add username by each account in phase 4
-    let newinvest = [];
-    if (selectedProject.investors) {
-      newinvest = [
-        ...selectedProject.investors,
-        { id: uuidv4(), name: "Naya", amount: data.minmumInvestement },
-      ];
-    } else {
-      newinvest = [
-        { id: uuidv4(), name: "Naya", amount: data.minmumInvestement },
-      ];
-    }
+    startTransition(async () => {
+      try {
+        const result = await investInProjectAction(
+          project.projectId,
+          data.minmumInvestement
+        );
 
-    const newProject = {
-      ...selectedProject,
-      investors: newinvest,
-      currentRaised: selectedProject.currentRaised + data.minmumInvestement,
-    };
-    const updatedProjects = projects.map((p) =>
-      p.id === selectedProject.id ? newProject : p,
-    );
-    const isSaved = saveProjectsToStorage(updatedProjects);
-    if (isSaved) {
-      setProjects(updatedProjects);
-      router.push(`/investor/projects/project-details/${projectId}/submit`);
-    }
+        if (result.success) {
+          router.push(`/investor/projects/project-details/${project.projectId}/submit`);
+        } else {
+          alert(result.message);
+        }
+      } catch (error) {
+        console.error(error);
+        alert("An unexpected error occurred.");
+      }
+    });
+  };
+
+  // HANDLE FORM EVENTS (ADMIN AUDIT)
+  const handleDecision = (newStatus: ProjectStatus) => {
+    startTransition(async () => {
+      try {
+        const result = await updateProjectStatusAction(
+          project.projectId,
+          newStatus,
+          feedback
+        );
+
+        if (result.success) {
+          router.push("/admin/approvals");
+        } else {
+          alert(result.message);
+        }
+      } catch (error) {
+        console.error(error);
+        alert("An unexpected error occurred.");
+      }
+    });
   };
 
   // FORMATED DATA
   const { formattedGoal, formattedMinInvest, fundPercent, lastUpdate } =
     useMemo(() => {
-      if (!selectedProject) {
-        return {
-          formattedGoal: "",
-          formattedMinInvest: "",
-          fundPercent: false,
-          lastUpdate: "",
-        };
-      }
-
       const goal = new Intl.NumberFormat("en", {
         style: "currency",
         currency: "USD",
         maximumFractionDigits: 0,
-      }).format(Number(selectedProject.goal));
+      }).format(Number(project.goal));
 
       const minInvest = new Intl.NumberFormat("en", {
         style: "currency",
         currency: "USD",
         maximumFractionDigits: 0,
-      }).format(Number(selectedProject.minInvest));
+      }).format(Number(project.minInvest));
 
       const percent =
-        selectedProject.currentRaised !== 0
-          ? Math.round(
-              (Number(selectedProject.currentRaised) /
-                Number(selectedProject.goal)) *
-                100,
-            )
+        project.currentRaised !== 0
+          ? Math.round((Number(project.currentRaised) / Number(project.goal)) * 100)
           : false;
 
-      const updated = selectedProject.updatedAt
+      const updated = project.updatedAt
         ? new Intl.DateTimeFormat("en-GB", {
             day: "numeric",
             month: "long",
             year: "numeric",
-          }).format(new Date(selectedProject.updatedAt))
+          }).format(new Date(project.updatedAt))
         : "Not updated yet";
 
       return {
@@ -146,37 +144,18 @@ export default function ProjectDetailsView({ role }: { role: string }) {
         fundPercent: percent,
         lastUpdate: updated,
       };
-    }, [selectedProject]);
-
-  // HANDLE FORM EVENTS
-  const handleDecision = (newStatus: ProjectStatus) => {
-    const updatedProjects = projects.map((p) => {
-      if (p.id === selectedProject.id)
-        return {
-          ...p,
-          status: newStatus,
-          adminFeedback: feedback,
-          updatedAt: new Date().toISOString(),
-        };
-      else return p;
-    });
-    const isSaved = saveProjectsToStorage(updatedProjects);
-    if (isSaved) {
-      setProjects(updatedProjects);
-      router.push("/admin/approvals");
-    }
-  };
+    }, [project]);
 
   return (
     <main className={`${role === "admin" ? "lg:pl-72" : ""}`}>
       {/* IMAGE + TITLE */}
       <div className="flex relative max-h-1/6">
-        {selectedProject.thumbnailUrl && (
+        {project.thumbnailUrl && (
           <img
-            src={selectedProject.thumbnailUrl}
+            src={project.thumbnailUrl}
             alt={"Project thumbnail"}
             className={
-              selectedProject.thumbnailUrl
+              project.thumbnailUrl
                 ? "rounded-xl h-80 w-full object-cover shrink-0"
                 : "hidden"
             }
@@ -184,17 +163,17 @@ export default function ProjectDetailsView({ role }: { role: string }) {
         )}
         <div className="flex justify-between items-center absolute right-1 md:right-3 lg:right-4 top-3 md:top-4 lg:top-5">
           <span className="shrink-0 bg-neutral-900/60 text-neutral-400 backdrop-blur-xl max-[360px]:py-1.5 py-2.5 max-[360px]:px-3 px-3.5 text-xs font-semibold rounded-full">
-            {selectedProject.status.toUpperCase()}
+            {project.status.toUpperCase()}
           </span>
         </div>
         <h1
           className={
-            selectedProject.thumbnailUrl
+            project.thumbnailUrl
               ? "absolute bottom-0 md:bottom-1 lg:bottom-2 left-3 md:left-4 lg:left-5 text-3xl font-bold my-2 lg:text-4xl text-neutral "
               : "text-4xl font-bold my-2 lg:text-5xl truncate max-w-2/3"
           }
         >
-          {selectedProject.title}
+          {project.title}
         </h1>
       </div>
       {/* ===== IMAGE + TITLE ===== */}
@@ -202,11 +181,10 @@ export default function ProjectDetailsView({ role }: { role: string }) {
         <TextAlignStart className="w-5 h-5 stroke-3" /> Full Description
       </h2>
       <p className="text-neutral-400 font-semibold text-base lg:text-lg max-w-xl">
-        {selectedProject.description}
+        {project.description}
       </p>
       {/* DETAILS CARDS */}
       <div className="md:grid grid-cols-2 gap-5 my-5">
-        {/* EXTRA FEAT: some data must be <HighlightedCard />  */}
         <DetailsCard
           label={"funding goal"}
           formattedGoal={formattedGoal}
@@ -229,8 +207,8 @@ export default function ProjectDetailsView({ role }: { role: string }) {
               VERIFIED DOCUMENTATION
             </h1>
             <div className="flex flex-col gap-3">
-              {selectedProject.attachedFilesUrls
-                ? selectedProject.attachedFilesUrls.map((f, index) => {
+              {project.attachedFilesUrls && Array.isArray(project.attachedFilesUrls)
+                ? project.attachedFilesUrls.map((f, index) => {
                     return <FileCard key={index} fileName={f} />;
                   })
                 : ""}
@@ -254,10 +232,13 @@ export default function ProjectDetailsView({ role }: { role: string }) {
             />
             <button
               type="submit"
-              className="max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mt-2.5 mb-2.5 cursor-pointer bg-primary text-neutral rounded-xl p-4 active:bg-secondary-200 transition-colors"
+              disabled={isPending}
+              className={`max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto w-full mt-2.5 mb-2.5 bg-primary text-neutral rounded-xl p-4 transition-colors ${
+                isPending ? "opacity-70 cursor-not-allowed" : "cursor-pointer active:bg-secondary-200"
+              }`}
             >
               <span className="font-bold lg:text-lg flex justify-center gap-2.5 items-center">
-                INVEST NOW
+                {isPending ? "PROCESSING..." : "INVEST NOW"}
                 <ArrowRight className="w-6 h-6 stroke-3" />
               </span>
             </button>
@@ -276,8 +257,8 @@ export default function ProjectDetailsView({ role }: { role: string }) {
               VERIFIED DOCUMENTATION
             </h1>
             <div className="flex flex-col gap-3">
-              {selectedProject.attachedFilesUrls
-                ? selectedProject.attachedFilesUrls.map((f, index) => {
+              {project.attachedFilesUrls && Array.isArray(project.attachedFilesUrls)
+                ? project.attachedFilesUrls.map((f, index) => {
                     return <FileCard key={index} fileName={f} />;
                   })
                 : ""}
@@ -288,10 +269,11 @@ export default function ProjectDetailsView({ role }: { role: string }) {
           {/* AUDIT DECISION FORM */}
           <AuditDecision
             role={role}
-            handleDecision={handleDecision}
-            selectedProject={selectedProject}
+            handleDecision={(status) => handleDecision(status as ProjectStatus)}
+            selectedProject={project}
             feedback={feedback}
             setFeedback={setFeedback}
+            isPending={isPending} 
           />
           {/* ===== AUDIT DECISION FORM ===== */}
 
@@ -309,8 +291,8 @@ export default function ProjectDetailsView({ role }: { role: string }) {
               VERIFIED DOCUMENTATION
             </h1>
             <div className="flex flex-col gap-3">
-              {selectedProject.attachedFilesUrls
-                ? selectedProject.attachedFilesUrls.map((f, index) => {
+              {project.attachedFilesUrls && Array.isArray(project.attachedFilesUrls)
+                ? project.attachedFilesUrls.map((f, index) => {
                     return <FileCard key={index} fileName={f} />;
                   })
                 : ""}
@@ -322,10 +304,11 @@ export default function ProjectDetailsView({ role }: { role: string }) {
           {/* AUDIT DECISION FORM */}
           <AuditDecision
             role={role}
-            handleDecision={handleDecision}
-            selectedProject={selectedProject}
+            handleDecision={(status) => handleDecision(status as ProjectStatus)}
+            selectedProject={project}
             feedback={feedback}
             setFeedback={setFeedback}
+            isPending={isPending} 
           />
           {/* ===== AUDIT DECISION FORM ===== */}
         </div>

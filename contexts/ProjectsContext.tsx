@@ -1,7 +1,6 @@
 "use client"; 
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { dummyProjects } from "@/data/dummyData";
 import { Project } from "@/types/project"; 
 
 interface ProjectsContextType {
@@ -16,7 +15,7 @@ interface ProjectsProviderProps {
 const ProjectsContext = createContext<ProjectsContextType | undefined>(undefined);
 
 export const ProjectsProvider = ({ children }: ProjectsProviderProps) => {
-  const [projects, setProjects] = useState<Project[]>(dummyProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
